@@ -1,8 +1,17 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "adjustmeeting",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Free, open-source video conferencing platform that works entirely in your browser",
+  "keywords": ["video-conferencing", "webrtc", "open-source", "zoom-alternative", "peer-to-peer"],
+  "author": "AdjustMeeting Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/adjustmeeting.git"
+  },
+  "homepage": "https://adjustmeeting.com",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

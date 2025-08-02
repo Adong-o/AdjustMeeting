@@ -276,4 +276,4 @@ If you find AdjustMeeting useful, please consider giving it a star! ⭐
 
 **Made with ❤️ by the open source community**
 
-[Website](https://adjustmeeting.com) • [Documentation](https://docs.adjustmeeting.com) • [Community](https://github.com/yourusername/adjustmeeting/discussions) • [Twitter](https://twitter.com/adjustmeeting)
+[Website](https://adjustmeeting.com) • [Documentation](https://docs.adjustmeeting.com) • [Community](https://github.com/yourusername/adjustmeeting/discussions) • [Twitter](https://twitter.com/adongoabc)
