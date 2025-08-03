@@ -1,8 +1,16 @@
 # AdjustMeeting 🎥
 
+*A beautiful, open-source video conferencing solution with advanced features that works entirely in your browser*
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
+
+## 🌐 **Live Demo**
+
+**Try AdjustMeeting now:** [https://adjustmeeting.onrender.com](https://adjustmeeting.onrender.com)
+
+*No registration required - just create or join a meeting instantly!*
 
 **AdjustMeeting** is a free, open-source video conferencing platform that works entirely in your browser. No downloads, no registration, no hassle - just instant video meetings with anyone, anywhere.
 
