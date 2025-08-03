@@ -1,0 +1,5 @@
+# Netlify redirects for SPA
+/*    /index.html   200
+
+# Handle room routes
+/room/*   /index.html   200
