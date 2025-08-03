@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Video, Users, Shield, Globe, User, Palette, Crown, Scroll, Zap } from 'lucide-react'
+import { Video, Users, Shield, Globe, Crown, Scroll, Zap, Lock, Wifi, UserCheck } from 'lucide-react'
 
 const HomePage: React.FC = () => {
   const [roomId, setRoomId] = useState('')
@@ -117,9 +117,9 @@ const HomePage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className={`${styles.cardBg} rounded-lg p-6 border ${styles.border} hover:scale-105 transition-all duration-300`}>
               {theme === 'ancient' ? (
-                <Crown className={`w-8 h-8 text-yellow-400 mx-auto mb-3`} />
+                <Shield className={`w-8 h-8 text-yellow-400 mx-auto mb-3`} />
               ) : (
-                <Shield className={`w-8 h-8 text-green-400 mx-auto mb-3`} />
+                <Lock className={`w-8 h-8 text-green-400 mx-auto mb-3`} />
               )}
               <h3 className={`text-lg font-semibold ${styles.text} mb-2 ${theme === 'ancient' ? 'font-serif' : ''}`}>
                 {theme === 'ancient' ? 'Sacred & Secure' : 'Private & Secure'}
@@ -133,9 +133,9 @@ const HomePage: React.FC = () => {
             </div>
             <div className={`${styles.cardBg} rounded-lg p-6 border ${styles.border} hover:scale-105 transition-all duration-300`}>
               {theme === 'ancient' ? (
-                <Scroll className={`w-8 h-8 text-amber-400 mx-auto mb-3`} />
+                <UserCheck className={`w-8 h-8 text-amber-400 mx-auto mb-3`} />
               ) : (
-                <Globe className={`w-8 h-8 text-blue-400 mx-auto mb-3`} />
+                <Wifi className={`w-8 h-8 text-blue-400 mx-auto mb-3`} />
               )}
               <h3 className={`text-lg font-semibold ${styles.text} mb-2 ${theme === 'ancient' ? 'font-serif' : ''}`}>
                 {theme === 'ancient' ? 'No Ancient Scrolls' : 'No Registration'}

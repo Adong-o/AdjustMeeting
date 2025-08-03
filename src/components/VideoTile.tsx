@@ -25,6 +25,9 @@ const VideoTile: React.FC<VideoTileProps> = ({
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream
       
+      // Ensure video plays
+      videoRef.current.play().catch(console.error)
+      
       // Check if audio track exists and is enabled
       const audioTrack = stream.getAudioTracks()[0]
       if (audioTrack) {

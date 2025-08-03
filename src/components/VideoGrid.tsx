@@ -14,7 +14,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
   isScreenSharing,
   isLocalVideoEnabled
 }) => {
-  const totalParticipants = 1 + remoteStreams.length
+  const totalParticipants = (localStream ? 1 : 0) + remoteStreams.length
   
   // If someone is screen sharing, use a different layout
   if (isScreenSharing) {
@@ -36,15 +36,17 @@ const VideoGrid: React.FC<VideoGridProps> = ({
         <div className="w-80 p-6 space-y-4 bg-gray-800/80 backdrop-blur-sm border-l border-gray-700">
           <div className="text-white text-sm font-medium mb-4 flex items-center">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-            Participants ({1 + remoteStreams.length})
+            Participants ({totalParticipants})
           </div>
-          <VideoTile
-            stream={localStream}
-            isLocal={true}
-            isVideoEnabled={isLocalVideoEnabled}
-            name="You"
-            className="w-full h-32 rounded-lg shadow-lg"
-          />
+          {localStream && (
+            <VideoTile
+              stream={localStream}
+              isLocal={true}
+              isVideoEnabled={isLocalVideoEnabled}
+              name="You"
+              className="w-full h-32 rounded-lg shadow-lg"
+            />
+          )}
           {remoteStreams.map((stream, index) => (
             <VideoTile
               key={index}
@@ -62,6 +64,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
 
   // Regular grid layout
   const getGridClass = () => {
+    if (totalParticipants === 0) return 'grid-cols-1'
     if (totalParticipants === 1) return 'grid-cols-1'
     if (totalParticipants === 2) return 'grid-cols-2'
     if (totalParticipants <= 4) return 'grid-cols-2 grid-rows-2'
@@ -73,13 +76,15 @@ const VideoGrid: React.FC<VideoGridProps> = ({
     <div className="h-full p-6 bg-gray-900">
       <div className={`grid ${getGridClass()} gap-4 h-full`}>
         {/* Local video */}
-        <VideoTile
-          stream={localStream}
-          isLocal={true}
-          isVideoEnabled={isLocalVideoEnabled}
-          name="You"
-          className="rounded-lg shadow-lg"
-        />
+        {localStream && (
+          <VideoTile
+            stream={localStream}
+            isLocal={true}
+            isVideoEnabled={isLocalVideoEnabled}
+            name="You"
+            className="rounded-lg shadow-lg"
+          />
+        )}
         
         {/* Remote videos */}
         {remoteStreams.map((stream, index) => (
@@ -92,6 +97,16 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             className="rounded-lg shadow-lg"
           />
         ))}
+        
+        {/* Show loading state when no streams */}
+        {totalParticipants === 0 && (
+          <div className="flex items-center justify-center bg-gray-800 rounded-lg">
+            <div className="text-center text-gray-400">
+              <Video className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>Connecting to camera...</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

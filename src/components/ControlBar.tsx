@@ -26,7 +26,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={onToggleAudio}
-          className={`p-4 rounded-full transition-all duration-200 ${
+          className={`p-4 rounded-full transition-all duration-200 shadow-lg hover:scale-110 ${
             isAudioEnabled
               ? 'bg-gray-700 hover:bg-gray-600 text-white'
               : 'bg-red-600 hover:bg-red-700 text-white'
@@ -39,7 +39,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
         {/* Video Toggle */}
         <button
           onClick={onToggleVideo}
-          className={`p-4 rounded-full transition-all duration-200 ${
+          className={`p-4 rounded-full transition-all duration-200 shadow-lg hover:scale-110 ${
             isVideoEnabled
               ? 'bg-gray-700 hover:bg-gray-600 text-white'
               : 'bg-red-600 hover:bg-red-700 text-white'
@@ -52,7 +52,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
         {/* Screen Share Toggle */}
         <button
           onClick={onToggleScreenShare}
-          className={`p-4 rounded-full transition-all duration-200 ${
+          className={`p-4 rounded-full transition-all duration-200 shadow-lg hover:scale-110 ${
             isScreenSharing
               ? 'bg-blue-600 hover:bg-blue-700 text-white'
               : 'bg-gray-700 hover:bg-gray-600 text-white'
@@ -64,7 +64,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
 
         {/* Settings */}
         <button
-          className="p-4 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all duration-200"
+          className="p-4 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all duration-200 shadow-lg hover:scale-110"
           title="Settings"
         >
           <Settings className="w-5 h-5" />
@@ -73,7 +73,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
         {/* Leave Meeting */}
         <button
           onClick={onLeaveMeeting}
-          className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition-all duration-200 ml-8"
+          className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition-all duration-200 shadow-lg hover:scale-110 ml-8"
           title="Leave meeting"
         >
           <Phone className="w-5 h-5 rotate-[135deg]" />

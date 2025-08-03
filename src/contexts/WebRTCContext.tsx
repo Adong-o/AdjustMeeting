@@ -61,6 +61,15 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Set host status
       setIsHost(meetingData?.isHost || false)
       
+      // Get user media
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      })
+      
+      setLocalStream(stream)
+      originalStreamRef.current = stream
+      
       // If not host, simulate joining request
       if (!meetingData?.isHost && meetingData?.participantName) {
         // Simulate pending participant (in real app, this would be sent to signaling server)
@@ -75,15 +84,6 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           setPendingParticipants(prev => [...prev, pendingParticipant])
         }, 1000)
       }
-      
-      // Get user media
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      })
-      
-      setLocalStream(stream)
-      originalStreamRef.current = stream
       
       // For demo purposes, we'll simulate a simple peer-to-peer connection
       // In a real implementation, you'd need a signaling server
@@ -130,8 +130,17 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (!isScreenSharing) {
         // Start screen sharing
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: true
+          video: {
+            mediaSource: 'screen',
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30 }
+          },
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100
+          }
         })
         
         screenStreamRef.current = screenStream

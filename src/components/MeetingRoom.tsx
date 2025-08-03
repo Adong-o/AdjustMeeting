@@ -93,7 +93,7 @@ const MeetingRoom: React.FC = () => {
           {meetingInfo.isHost && pendingParticipants.length > 0 && (
             <button
               onClick={() => setShowAdmissionControl(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors animate-pulse"
+              className="flex items-center space-x-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-all duration-300 animate-pulse shadow-lg"
             >
               <Users className="w-4 h-4" />
               <span>{pendingParticipants.length} waiting</span>
@@ -102,7 +102,7 @@ const MeetingRoom: React.FC = () => {
           
           <button
             onClick={() => setShowParticipants(!showParticipants)}
-            className="flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:scale-105"
           >
             <Users className="w-4 h-4" />
             <span>{participants.length + 1}</span>
