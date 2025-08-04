@@ -12,6 +12,13 @@
     "url": "https://github.com/yourusername/adjustmeeting.git"
   },
   "homepage": "https://adjustmeeting.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/adjustmeeting.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/adjustmeeting/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
