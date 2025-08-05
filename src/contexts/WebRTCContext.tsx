@@ -131,7 +131,6 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Start screen sharing
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: {
-            mediaSource: 'screen',
             width: { ideal: 1920 },
             height: { ideal: 1080 },
             frameRate: { ideal: 30 }
@@ -154,6 +153,11 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             setLocalStream(originalStreamRef.current)
             setIsScreenSharing(false)
             screenStreamRef.current = null
+            // Update video enabled state based on original stream
+            const videoTrack = originalStreamRef.current.getVideoTracks()[0]
+            if (videoTrack) {
+              setIsVideoEnabled(videoTrack.enabled)
+            }
           }
         })
         
@@ -166,6 +170,11 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
         if (originalStreamRef.current) {
           setLocalStream(originalStreamRef.current)
+          // Update video enabled state based on original stream
+          const videoTrack = originalStreamRef.current.getVideoTracks()[0]
+          if (videoTrack) {
+            setIsVideoEnabled(videoTrack.enabled)
+          }
         }
         setIsScreenSharing(false)
       }

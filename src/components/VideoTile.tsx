@@ -49,7 +49,7 @@ const VideoTile: React.FC<VideoTileProps> = ({
 
   return (
     <div className={`relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-200 ${className}`}>
-      {stream && (isVideoEnabled || isLocal) ? (
+      {stream && isVideoEnabled ? (
         <video
           ref={videoRef}
           autoPlay
