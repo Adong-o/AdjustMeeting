@@ -27,12 +27,15 @@ const VideoTile: React.FC<VideoTileProps> = ({
       videoRef.current.srcObject = stream
       
       // Ensure video plays
-      videoRef.current.play().catch((error) => {
-        // Suppress AbortError which occurs when video is removed during play
-        if (error.name !== 'AbortError') {
-          console.error('Video play error:', error)
-        }
-      })
+      const playPromise = videoRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Suppress AbortError which occurs when video is removed during play
+          if (error.name !== 'AbortError') {
+            console.error('Video play error:', error)
+          }
+        })
+      }
     }
     
     // Cleanup function to properly detach media stream
@@ -46,13 +49,13 @@ const VideoTile: React.FC<VideoTileProps> = ({
 
   return (
     <div className={`relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-200 ${className}`}>
-      {stream && isVideoEnabled ? (
+      {stream && (isVideoEnabled || isLocal) ? (
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted={isLocal} // Always mute local video to prevent feedback
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${isLocal ? 'scale-x-[-1]' : ''}`}
         />
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-700 to-gray-800">
