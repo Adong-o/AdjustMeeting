@@ -1,4 +1,5 @@
 import React from 'react'
+import { Video } from 'lucide-react'
 import VideoTile from './VideoTile'
 
 interface VideoGridProps {
