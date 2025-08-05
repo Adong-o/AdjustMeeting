@@ -119,6 +119,7 @@ const MeetingRoom: React.FC = () => {
             remoteStreams={remoteStreams}
             isScreenSharing={isScreenSharing}
             isLocalVideoEnabled={isVideoEnabled}
+            isLocalAudioEnabled={isAudioEnabled}
           />
         </div>
 
@@ -127,6 +128,10 @@ const MeetingRoom: React.FC = () => {
           <div className="w-80 bg-gray-800 border-l border-gray-700">
             <ParticipantsList
               participants={participants}
+              localParticipantName={meetingInfo.hostName}
+              isLocalHost={isHost}
+              isLocalAudioEnabled={isAudioEnabled}
+              isLocalVideoEnabled={isVideoEnabled}
               onClose={() => setShowParticipants(false)}
             />
           </div>

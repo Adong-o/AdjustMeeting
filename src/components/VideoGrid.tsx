@@ -6,13 +6,15 @@ interface VideoGridProps {
   remoteStreams: MediaStream[]
   isScreenSharing: boolean
   isLocalVideoEnabled: boolean
+  isLocalAudioEnabled: boolean
 }
 
 const VideoGrid: React.FC<VideoGridProps> = ({
   localStream,
   remoteStreams,
   isScreenSharing,
-  isLocalVideoEnabled
+  isLocalVideoEnabled,
+  isLocalAudioEnabled
 }) => {
   const totalParticipants = (localStream ? 1 : 0) + remoteStreams.length
   
@@ -26,6 +28,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             stream={localStream}
             isLocal={true}
             isVideoEnabled={isLocalVideoEnabled}
+            isAudioEnabled={isLocalAudioEnabled}
             isScreenShare={true}
             name="You (Screen Share)"
             className="w-full h-full rounded-lg shadow-2xl"
@@ -43,6 +46,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
               stream={localStream}
               isLocal={true}
               isVideoEnabled={isLocalVideoEnabled}
+              isAudioEnabled={isLocalAudioEnabled}
               name="You"
               className="w-full h-32 rounded-lg shadow-lg"
             />
@@ -53,6 +57,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
               stream={stream}
               isLocal={false}
               isVideoEnabled={true}
+              isAudioEnabled={true}
               name={`Participant ${index + 1}`}
               className="w-full h-32 rounded-lg shadow-lg"
             />
@@ -81,6 +86,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             stream={localStream}
             isLocal={true}
             isVideoEnabled={isLocalVideoEnabled}
+            isAudioEnabled={isLocalAudioEnabled}
             name="You"
             className="rounded-lg shadow-lg"
           />
@@ -93,6 +99,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             stream={stream}
             isLocal={false}
             isVideoEnabled={true}
+            isAudioEnabled={true}
             name={`Participant ${index + 1}`}
             className="rounded-lg shadow-lg"
           />

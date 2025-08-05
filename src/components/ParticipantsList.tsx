@@ -11,10 +11,21 @@ interface Participant {
 
 interface ParticipantsListProps {
   participants: Participant[]
+  localParticipantName: string
+  isLocalHost: boolean
+  isLocalAudioEnabled: boolean
+  isLocalVideoEnabled: boolean
   onClose: () => void
 }
 
-const ParticipantsList: React.FC<ParticipantsListProps> = ({ participants, onClose }) => {
+const ParticipantsList: React.FC<ParticipantsListProps> = ({ 
+  participants, 
+  localParticipantName,
+  isLocalHost,
+  isLocalAudioEnabled,
+  isLocalVideoEnabled,
+  onClose 
+}) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -34,19 +45,29 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({ participants, onClo
         <div className="p-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">Y</span>
+              <span className="text-white text-sm font-semibold">
+                {localParticipantName.charAt(0).toUpperCase()}
+              </span>
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-white font-medium">You</span>
-                <Crown className="w-4 h-4 text-yellow-500" />
+                <span className="text-white font-medium">{localParticipantName} (You)</span>
+                {isLocalHost && <Crown className="w-4 h-4 text-yellow-500" />}
               </div>
-              <span className="text-gray-400 text-sm">Host</span>
+              <span className="text-gray-400 text-sm">{isLocalHost ? 'Host' : 'Participant'}</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Mic className="w-4 h-4 text-green-400" />
-            <Video className="w-4 h-4 text-green-400" />
+            {isLocalAudioEnabled ? (
+              <Mic className="w-4 h-4 text-green-400" />
+            ) : (
+              <MicOff className="w-4 h-4 text-red-400" />
+            )}
+            {isLocalVideoEnabled ? (
+              <Video className="w-4 h-4 text-green-400" />
+            ) : (
+              <VideoOff className="w-4 h-4 text-red-400" />
+            )}
           </div>
         </div>
 

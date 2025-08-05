@@ -5,6 +5,7 @@ interface VideoTileProps {
   stream: MediaStream | null
   isLocal: boolean
   isVideoEnabled: boolean
+  isAudioEnabled: boolean
   name: string
   isScreenShare?: boolean
   className?: string
@@ -14,12 +15,12 @@ const VideoTile: React.FC<VideoTileProps> = ({
   stream,
   isLocal,
   isVideoEnabled,
+  isAudioEnabled,
   name,
   isScreenShare = false,
   className = ''
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isAudioEnabled, setIsAudioEnabled] = useState(true)
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -27,27 +28,9 @@ const VideoTile: React.FC<VideoTileProps> = ({
       
       // Ensure video plays
       videoRef.current.play().catch(console.error)
-      
-      // Check if audio track exists and is enabled
-      const audioTrack = stream.getAudioTracks()[0]
-      if (audioTrack) {
-        setIsAudioEnabled(audioTrack.enabled)
-      }
     }
   }, [stream])
 
-  useEffect(() => {
-    if (stream) {
-      const audioTrack = stream.getAudioTracks()[0]
-      if (audioTrack) {
-        const handleTrackChange = () => {
-          setIsAudioEnabled(audioTrack.enabled)
-        }
-        audioTrack.addEventListener('ended', handleTrackChange)
-        return () => audioTrack.removeEventListener('ended', handleTrackChange)
-      }
-    }
-  }, [stream])
 
   return (
     <div className={`relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-200 ${className}`}>
