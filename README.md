@@ -290,16 +290,6 @@ npm run build
 - Try refreshing both browsers
 - Check firewall settings
 
-**Chat or whiteboard not working:**
-- Ensure JavaScript is enabled
-- Try refreshing the page
-- Check browser console for errors
-
-**File sharing issues:**
-- Check file size limits (browser dependent)
-- Ensure file type is supported
-- Try smaller files if upload fails
-
 ### Getting Help
 
 - 📖 Check our [Wiki](https://github.com/yourusername/adjustmeeting/wiki)
@@ -316,6 +306,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - React team for the amazing framework
 - Tailwind CSS for beautiful styling utilities
 - Lucide for clean, consistent icons
+- Canvas API for whiteboard functionality
+- File API for seamless file sharing
 - All our contributors who make this project better
 
 ## 🌟 Star History
