@@ -16,15 +16,43 @@
 
 ## ✨ Features
 
-- 🚀 **Zero Setup** - Works instantly in any modern browser
-- 🔒 **Privacy First** - Peer-to-peer connections, no data stored on servers
-- 📱 **Responsive Design** - Perfect on desktop, tablet, and mobile
-- 🎬 **Screen Sharing** - Share your entire screen with presentation mode
-- 🎤 **Audio/Video Controls** - Mute, unmute, camera on/off with one click
-- 👥 **Participant Management** - See who's in the meeting and their status
-- 🔐 **Meeting Admission** - Host controls who can join the meeting
-- 🎨 **Modern UI** - Clean, professional interface inspired by industry leaders
-- 🌐 **Cross-Platform** - Works on Windows, Mac, Linux, iOS, Android
+### 🚀 **Core Features**
+- **Zero Setup** - Works instantly in any modern browser
+- **Privacy First** - Peer-to-peer connections, no data stored on servers
+- **Responsive Design** - Perfect on desktop, tablet, and mobile
+- **Cross-Platform** - Works on Windows, Mac, Linux, iOS, Android
+
+### 📹 **Video & Audio**
+- **HD Video Calls** - Crystal clear video with automatic quality adjustment
+- **Screen Sharing** - Share your entire screen with presentation mode
+- **Audio/Video Controls** - Mute, unmute, camera on/off with one click
+- **Smart Layout** - Automatic grid layout that adapts to participant count
+
+### 👥 **Meeting Management**
+- **Participant Management** - See who's in the meeting and their status
+- **Meeting Admission** - Host controls who can join the meeting
+- **Host Controls** - Crown indicator and special permissions for meeting hosts
+- **Real-time Status** - Live audio/video status indicators for all participants
+
+### 🎨 **Collaboration Tools**
+- **Real-time Whiteboard** - Draw, annotate, and brainstorm together
+  - Multiple drawing tools (pen, eraser, shapes)
+  - Color picker with 8+ colors
+  - Adjustable brush sizes
+  - Download whiteboard as PNG
+  - Multi-user simultaneous drawing
+
+- **Live Chat with File Sharing** - Communicate without interrupting
+  - Real-time messaging
+  - File upload and sharing
+  - Typing indicators
+  - Message timestamps
+  - Unread message notifications
+
+### 🎯 **Professional Features**
+- **Modern UI** - Clean, professional interface inspired by industry leaders
+- **Meeting Rooms** - Custom room codes for easy joining
+- **Persistent Sessions** - Drawings and chat history maintained during meeting
 
 ## 🚀 Quick Start
 
@@ -39,6 +67,10 @@
    - Click the shared meeting link
    - Enter your name
    - Wait for host approval to join
+4. **Use collaboration tools:**
+   - Click the chat icon to send messages and share files
+   - Click the whiteboard icon to draw and annotate together
+   - Use screen sharing for presentations
 
 ### For Developers
 
@@ -95,7 +127,9 @@ src/
 │   ├── VideoTile.tsx    # Individual participant video
 │   ├── ControlBar.tsx   # Meeting controls (mute, camera, etc.)
 │   ├── ParticipantsList.tsx  # Participant management
-│   └── AdmissionControl.tsx  # Host admission controls
+│   ├── AdmissionControl.tsx  # Host admission controls
+│   ├── ChatPanel.tsx    # Real-time chat with file sharing
+│   └── Whiteboard.tsx   # Collaborative whiteboard
 ├── contexts/            # React contexts
 │   └── WebRTCContext.tsx     # WebRTC state management
 ├── hooks/              # Custom React hooks
@@ -179,7 +213,12 @@ const meetingConfig = {
   roomId: 'my-awesome-meeting',
   hostName: 'John Doe',
   title: 'Weekly Team Sync',
-  requireAdmission: true
+  requireAdmission: true,
+  features: {
+    chat: true,
+    whiteboard: true,
+    screenShare: true
+  }
 };
 ```
 
@@ -190,7 +229,8 @@ const meetingConfig = {
 const joinRequest = {
   roomId: 'my-awesome-meeting',
   participantName: 'Jane Smith',
-  requestTime: new Date()
+  requestTime: new Date(),
+  capabilities: ['video', 'audio', 'chat', 'whiteboard']
 };
 ```
 

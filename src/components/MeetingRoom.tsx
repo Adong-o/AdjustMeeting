@@ -5,6 +5,8 @@ import VideoGrid from './VideoGrid'
 import ControlBar from './ControlBar'
 import ParticipantsList from './ParticipantsList'
 import AdmissionControl from './AdmissionControl'
+import ChatPanel from './ChatPanel'
+import Whiteboard from './Whiteboard'
 import { Copy, Users, Settings, Crown } from 'lucide-react'
 
 const MeetingRoom: React.FC = () => {
@@ -29,6 +31,9 @@ const MeetingRoom: React.FC = () => {
 
   const [showParticipants, setShowParticipants] = useState(false)
   const [showAdmissionControl, setShowAdmissionControl] = useState(false)
+  const [showChat, setShowChat] = useState(false)
+  const [showWhiteboard, setShowWhiteboard] = useState(false)
+  const [unreadMessages, setUnreadMessages] = useState(0)
   const [copied, setCopied] = useState(false)
   const [meetingInfo, setMeetingInfo] = useState({
     title: 'Meeting',
@@ -151,9 +156,17 @@ const MeetingRoom: React.FC = () => {
         isAudioEnabled={isAudioEnabled}
         isVideoEnabled={isVideoEnabled}
         isScreenSharing={isScreenSharing}
+        isChatOpen={showChat}
+        isWhiteboardOpen={showWhiteboard}
+        unreadMessages={unreadMessages}
         onToggleAudio={toggleAudio}
         onToggleVideo={toggleVideo}
         onToggleScreenShare={toggleScreenShare}
+        onToggleChat={() => {
+          setShowChat(!showChat)
+          if (!showChat) setUnreadMessages(0)
+        }}
+        onToggleWhiteboard={() => setShowWhiteboard(!showWhiteboard)}
         onLeaveMeeting={handleLeaveMeeting}
       />
     </div>

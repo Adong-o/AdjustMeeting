@@ -1,13 +1,18 @@
 import React from 'react'
-import { Mic, MicOff, Video, VideoOff, Monitor, MonitorOff, Phone, Settings } from 'lucide-react'
+import { Mic, MicOff, Video, VideoOff, Monitor, MonitorOff, Phone, Settings, MessageCircle, PenTool } from 'lucide-react'
 
 interface ControlBarProps {
   isAudioEnabled: boolean
   isVideoEnabled: boolean
   isScreenSharing: boolean
+  isChatOpen: boolean
+  isWhiteboardOpen: boolean
+  unreadMessages: number
   onToggleAudio: () => void
   onToggleVideo: () => void
   onToggleScreenShare: () => void
+  onToggleChat: () => void
+  onToggleWhiteboard: () => void
   onLeaveMeeting: () => void
 }
 
@@ -15,9 +20,14 @@ const ControlBar: React.FC<ControlBarProps> = ({
   isAudioEnabled,
   isVideoEnabled,
   isScreenSharing,
+  isChatOpen,
+  isWhiteboardOpen,
+  unreadMessages,
   onToggleAudio,
   onToggleVideo,
   onToggleScreenShare,
+  onToggleChat,
+  onToggleWhiteboard,
   onLeaveMeeting
 }) => {
   return (
@@ -68,6 +78,37 @@ const ControlBar: React.FC<ControlBarProps> = ({
           title="Settings"
         >
           <Settings className="w-5 h-5" />
+        </button>
+
+        {/* Chat Toggle */}
+        <button
+          onClick={onToggleChat}
+          className={`relative p-4 rounded-full transition-all duration-200 shadow-lg hover:scale-110 ${
+            isChatOpen
+              ? 'bg-green-600 hover:bg-green-700 text-white'
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
+          }`}
+          title="Toggle chat"
+        >
+          <MessageCircle className="w-5 h-5" />
+          {unreadMessages > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {unreadMessages > 9 ? '9+' : unreadMessages}
+            </span>
+          )}
+        </button>
+
+        {/* Whiteboard Toggle */}
+        <button
+          onClick={onToggleWhiteboard}
+          className={`p-4 rounded-full transition-all duration-200 shadow-lg hover:scale-110 ${
+            isWhiteboardOpen
+              ? 'bg-purple-600 hover:bg-purple-700 text-white'
+              : 'bg-gray-700 hover:bg-gray-600 text-white'
+          }`}
+          title="Toggle whiteboard"
+        >
+          <PenTool className="w-5 h-5" />
         </button>
 
         {/* Leave Meeting */}
