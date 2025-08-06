@@ -213,12 +213,7 @@ const meetingConfig = {
   roomId: 'my-awesome-meeting',
   hostName: 'John Doe',
   title: 'Weekly Team Sync',
-  requireAdmission: true,
-  features: {
-    chat: true,
-    whiteboard: true,
-    screenShare: true
-  }
+  requireAdmission: true
 };
 ```
 
@@ -229,8 +224,7 @@ const meetingConfig = {
 const joinRequest = {
   roomId: 'my-awesome-meeting',
   participantName: 'Jane Smith',
-  requestTime: new Date(),
-  capabilities: ['video', 'audio', 'chat', 'whiteboard']
+  requestTime: new Date()
 };
 ```
 
@@ -295,6 +289,16 @@ npm run build
 - Ensure both participants have stable internet
 - Try refreshing both browsers
 - Check firewall settings
+
+**Chat or whiteboard not working:**
+- Ensure JavaScript is enabled
+- Try refreshing the page
+- Check browser console for errors
+
+**File sharing issues:**
+- Check file size limits (browser dependent)
+- Ensure file type is supported
+- Try smaller files if upload fails
 
 ### Getting Help
 
