@@ -7,10 +7,6 @@
   "keywords": ["video-conferencing", "webrtc", "open-source", "zoom-alternative", "peer-to-peer"],
   "author": "AdjustMeeting Contributors",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/adjustmeeting.git"
-  },
   "homepage": "https://adjustmeeting.com",
   "repository": {
     "type": "git",
