@@ -4,7 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Free, open-source video conferencing platform that works entirely in your browser",
-  "keywords": ["video-conferencing", "webrtc", "open-source", "zoom-alternative", "peer-to-peer"],
+  "keywords": [
+    "video-conferencing",
+    "webrtc",
+    "open-source",
+    "zoom-alternative",
+    "peer-to-peer"
+  ],
   "author": "AdjustMeeting Contributors",
   "license": "MIT",
   "homepage": "https://adjustmeeting.com",
@@ -39,6 +45,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "terser": "^5.43.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2"
