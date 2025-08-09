@@ -130,8 +130,16 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (!isScreenSharing) {
         // Start screen sharing
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: true
+          video: {
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30 }
+          },
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100
+          }
         })
         
         screenStreamRef.current = screenStream

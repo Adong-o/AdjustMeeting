@@ -7,7 +7,6 @@ import ParticipantsList from './ParticipantsList'
 import AdmissionControl from './AdmissionControl'
 import ChatPanel from './ChatPanel'
 import Whiteboard from './Whiteboard'
-import Whiteboard from './Whiteboard'
 import { Copy, Users, Settings, Crown } from 'lucide-react'
 
 const MeetingRoom: React.FC = () => {
