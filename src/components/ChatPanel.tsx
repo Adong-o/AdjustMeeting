@@ -74,23 +74,34 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Create object URL for file preview/download
-      const fileUrl = URL.createObjectURL(file)
-      
-      const fileMessage: ChatMessage = {
-        id: Date.now().toString(),
-        sender: currentUser,
-        message: `Shared a file: ${file.name}`,
-        timestamp: new Date(),
-        type: 'file',
-        fileData: {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          url: fileUrl
-        }
+      // Check file size (limit to 10MB for demo)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB')
+        return
       }
-      setMessages(prev => [...prev, fileMessage])
+
+      try {
+        // Create object URL for file preview/download
+        const fileUrl = URL.createObjectURL(file)
+        
+        const fileMessage: ChatMessage = {
+          id: Date.now().toString(),
+          sender: currentUser,
+          message: `Shared a file: ${file.name}`,
+          timestamp: new Date(),
+          type: 'file',
+          fileData: {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            url: fileUrl
+          }
+        }
+        setMessages(prev => [...prev, fileMessage])
+      } catch (error) {
+        console.error('Error uploading file:', error)
+        alert('Error uploading file. Please try again.')
+      }
     }
     // Reset file input
     if (fileInputRef.current) {

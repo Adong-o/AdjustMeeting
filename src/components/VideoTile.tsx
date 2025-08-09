@@ -26,25 +26,27 @@ const VideoTile: React.FC<VideoTileProps> = ({
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream
       
-      // Ensure video plays
-      const playPromise = videoRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          // Suppress AbortError which occurs when video is removed during play
-          if (error.name !== 'AbortError') {
-            console.error('Video play error:', error)
-          }
-        })
-      }
+      // Ensure video plays with proper error handling
+      videoRef.current.play().catch((error) => {
+        // Only log non-abort errors
+        if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
+          console.warn('Video play warning:', error.message)
+        }
+      })
+    } else if (videoRef.current) {
+      // Clear the video source if no stream
+      videoRef.current.srcObject = null
     }
-    
-    // Cleanup function to properly detach media stream
+  }, [stream, isVideoEnabled])
+
+  // Cleanup effect
+  useEffect(() => {
     return () => {
       if (videoRef.current) {
         videoRef.current.srcObject = null
       }
     }
-  }, [stream])
+  }, [])
 
 
   return (
