@@ -1,6 +1,6 @@
 # AdjustMeeting 🎥
 
-*A beautiful, open-source video conferencing solution with advanced features that works entirely in your browser*
+*A beautiful, open-source video conferencing solution with advanced features that works entirely in your browser.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -8,7 +8,7 @@
 
 ## 🌐 **Live Demo**
 
-**Try AdjustMeeting now:** [https://adjustmeeting.onrender.com](https://adjustmeeting.onrender.com)
+**Try AdjustMeeting now:** [not deployed yet](https://adjustmeeting.onrender.com)
 
 *No registration required - just create or join a meeting instantly!*
 
