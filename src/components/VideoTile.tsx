@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { User, Mic, MicOff } from 'lucide-react'
 
 interface VideoTileProps {
@@ -25,64 +25,43 @@ const VideoTile: React.FC<VideoTileProps> = ({
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream
-      
-      // Ensure video plays
-      const playPromise = videoRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          // Suppress AbortError which occurs when video is removed during play
-          if (error.name !== 'AbortError') {
-            console.error('Video play error:', error)
-          }
-        })
-      }
-    }
-    
-    // Cleanup function to properly detach media stream
-    return () => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = null
-      }
     }
   }, [stream])
 
-
   return (
-    <div className={`relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-200 ${className}`}>
+    <div className={`relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 ${className}`}>
       {stream && isVideoEnabled ? (
         <video
           ref={videoRef}
           autoPlay
           playsInline
-          muted={isLocal} // Always mute local video to prevent feedback
-          className={`w-full h-full object-cover ${isLocal ? 'scale-x-[-1]' : ''}`}
+          muted={isLocal}
+          className={`w-full h-full object-cover ${isLocal && !isScreenShare ? 'scale-x-[-1]' : ''}`}
         />
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-700 to-gray-800">
-          <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mb-2">
-            <User className="w-8 h-8 text-gray-300" />
+          <div className="w-24 h-24 bg-gray-600 rounded-full flex items-center justify-center mb-4">
+            <User className="w-12 h-12 text-gray-300" />
           </div>
-          <span className="text-gray-300 text-sm font-medium">{name}</span>
+          <span className="text-gray-300 text-lg font-medium">{name}</span>
         </div>
       )}
       
-      {/* Overlay */}
-
-      {/* Always visible name and status */}
-      <div className="absolute bottom-3 left-3 flex items-center space-x-2">
-        <span className="text-white text-xs font-medium bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+      {/* Name and status overlay */}
+      <div className="absolute bottom-4 left-4 flex items-center space-x-2">
+        <span className="text-white text-sm font-medium bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full">
           {name}
         </span>
         {!isAudioEnabled && (
-          <div className="bg-red-500 p-1.5 rounded-full shadow-lg">
+          <div className="bg-red-500 p-1.5 rounded-full">
             <MicOff className="w-3 h-3 text-white" />
           </div>
         )}
       </div>
       
       {/* Connection indicator */}
-      <div className="absolute top-3 right-3">
-        <div className="w-2 h-2 bg-green-500 rounded-full shadow-lg"></div>
+      <div className="absolute top-4 right-4">
+        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
       </div>
     </div>
   )
