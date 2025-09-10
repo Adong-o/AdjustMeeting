@@ -2,12 +2,22 @@ import React from 'react'
 import { Video } from 'lucide-react'
 import VideoTile from './VideoTile'
 
+interface Participant {
+  id: string
+  name: string
+  stream?: MediaStream
+  isAudioEnabled: boolean
+  isVideoEnabled: boolean
+}
+
 interface VideoGridProps {
   localStream: MediaStream | null
   remoteStreams: MediaStream[]
   isScreenSharing: boolean
   isLocalVideoEnabled: boolean
   isLocalAudioEnabled: boolean
+  localUserName: string
+  participants: Participant[]
 }
 
 const VideoGrid: React.FC<VideoGridProps> = ({
@@ -15,7 +25,9 @@ const VideoGrid: React.FC<VideoGridProps> = ({
   remoteStreams,
   isScreenSharing,
   isLocalVideoEnabled,
-  isLocalAudioEnabled
+  isLocalAudioEnabled,
+  localUserName,
+  participants
 }) => {
   const totalParticipants = (localStream ? 1 : 0) + remoteStreams.length
   
@@ -31,7 +43,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             isVideoEnabled={isLocalVideoEnabled}
             isAudioEnabled={isLocalAudioEnabled}
             isScreenShare={true}
-            name="You (Screen Share)"
+            name={`${localUserName} (Screen Share)`}
             className="w-full h-full rounded-lg shadow-2xl"
           />
         </div>
@@ -48,21 +60,24 @@ const VideoGrid: React.FC<VideoGridProps> = ({
               isLocal={true}
               isVideoEnabled={isLocalVideoEnabled}
               isAudioEnabled={isLocalAudioEnabled}
-              name="You"
+              name={localUserName}
               className="w-full h-32 rounded-lg shadow-lg"
             />
           )}
-          {remoteStreams.map((stream, index) => (
+          {remoteStreams.map((stream, index) => {
+            const participant = participants[index]
+            return (
             <VideoTile
               key={index}
               stream={stream}
               isLocal={false}
-              isVideoEnabled={true}
-              isAudioEnabled={true}
-              name={`Participant ${index + 1}`}
+              isVideoEnabled={participant?.isVideoEnabled ?? true}
+              isAudioEnabled={participant?.isAudioEnabled ?? true}
+              name={participant?.name || `Participant ${index + 1}`}
               className="w-full h-32 rounded-lg shadow-lg"
             />
-          ))}
+            )
+          })}
         </div>
       </div>
     )
@@ -88,30 +103,34 @@ const VideoGrid: React.FC<VideoGridProps> = ({
             isLocal={true}
             isVideoEnabled={isLocalVideoEnabled}
             isAudioEnabled={isLocalAudioEnabled}
-            name="You"
+            name={localUserName}
             className="rounded-lg shadow-lg"
           />
         )}
         
         {/* Remote videos */}
-        {remoteStreams.map((stream, index) => (
+        {remoteStreams.map((stream, index) => {
+          const participant = participants[index]
+          return (
           <VideoTile
             key={index}
             stream={stream}
             isLocal={false}
-            isVideoEnabled={true}
-            isAudioEnabled={true}
-            name={`Participant ${index + 1}`}
+            isVideoEnabled={participant?.isVideoEnabled ?? true}
+            isAudioEnabled={participant?.isAudioEnabled ?? true}
+            name={participant?.name || `Participant ${index + 1}`}
             className="rounded-lg shadow-lg"
           />
-        ))}
+          )
+        })}
         
         {/* Show loading state when no streams */}
         {totalParticipants === 0 && (
           <div className="flex items-center justify-center bg-gray-800 rounded-lg">
             <div className="text-center text-gray-400">
               <Video className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Connecting to camera...</p>
+              <p>Waiting for participants to join...</p>
+              <p className="text-sm mt-2">Share the room code with others</p>
             </div>
           </div>
         )}
