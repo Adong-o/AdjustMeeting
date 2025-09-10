@@ -105,6 +105,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isScreenSharing, setIsScreenSharing] = useState(false)
   const [isHost, setIsHost] = useState(false)
   const [roomId, setRoomId] = useState<string | null>(null)
+  const [meetingTitle, setMeetingTitle] = useState<string>('Meeting')
   
   const originalStreamRef = useRef<MediaStream | null>(null)
   const signalingRef = useRef<SimpleSignaling | null>(null)
@@ -140,7 +141,8 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           type: 'room_created',
           to: 'all',
           hostId: participantIdRef.current,
-          hostName: meetingData.hostName
+          hostName: meetingData.hostName,
+          meetingTitle: meetingData.meetingTitle
         })
       } else {
         // If participant, request to join
@@ -171,6 +173,13 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const handleSignalingMessage = useCallback(async (message: any) => {
     switch (message.type) {
+      case 'room_created':
+        if (message.from !== participantIdRef.current) {
+          // Store host info
+          setMeetingTitle(message.meetingTitle || 'Meeting')
+        }
+        break
+        
       case 'join_request':
         if (isHost && message.from !== participantIdRef.current) {
           // Add to pending participants
