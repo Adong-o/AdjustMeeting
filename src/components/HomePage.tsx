@@ -5,15 +5,17 @@ import { Video, Users, Shield } from 'lucide-react'
 const HomePage: React.FC = () => {
   const [roomId, setRoomId] = useState('')
   const [hostName, setHostName] = useState('')
+  const [meetingTitle, setMeetingTitle] = useState('')
   const [joinRoomId, setJoinRoomId] = useState('')
   const [participantName, setParticipantName] = useState('')
   const navigate = useNavigate()
 
   const createMeeting = () => {
-    if (roomId.trim() && hostName.trim()) {
+    if (roomId.trim() && hostName.trim() && meetingTitle.trim()) {
       const meetingData = {
         roomId: roomId.trim(),
         hostName: hostName.trim(),
+        meetingTitle: meetingTitle.trim(),
         isHost: true
       }
       navigate(`/room/${roomId.trim()}`, { state: meetingData })
@@ -37,44 +39,44 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="max-w-6xl w-full">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            <Video className="w-12 h-12 text-blue-400 mr-3" />
-            <h1 className="text-4xl font-bold text-white">AdjustMeeting</h1>
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="flex items-center justify-center mb-4 sm:mb-6">
+            <Video className="w-8 h-8 sm:w-12 sm:h-12 text-blue-400 mr-2 sm:mr-3" />
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">AdjustMeeting</h1>
           </div>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 px-4">
             Free, open source video conferencing. No registration required.
           </p>
           
           {/* Features */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-              <Shield className="w-8 h-8 text-green-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Private & Secure</h3>
-              <p className="text-gray-400">End-to-end encrypted peer-to-peer connections</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 px-4">
+            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700">
+              <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mx-auto mb-2 sm:mb-3" />
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">Private & Secure</h3>
+              <p className="text-sm sm:text-base text-gray-400">End-to-end encrypted peer-to-peer connections</p>
             </div>
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-              <Video className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">No Registration</h3>
-              <p className="text-gray-400">Create or join meetings instantly without accounts</p>
+            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700">
+              <Video className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mx-auto mb-2 sm:mb-3" />
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">No Registration</h3>
+              <p className="text-sm sm:text-base text-gray-400">Create or join meetings instantly without accounts</p>
             </div>
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-              <Users className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Easy Sharing</h3>
-              <p className="text-gray-400">Share custom room codes with anyone</p>
+            <div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-gray-700 sm:col-span-2 lg:col-span-1">
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400 mx-auto mb-2 sm:mb-3" />
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">Easy Sharing</h3>
+              <p className="text-sm sm:text-base text-gray-400">Share custom room codes with anyone</p>
             </div>
           </div>
         </div>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 px-4">
           {/* Create Meeting */}
-          <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <Video className="w-6 h-6 mr-3 text-blue-400" />
+          <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 border border-gray-700">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+              <Video className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-blue-400" />
               Create Meeting
             </h2>
             <div className="space-y-4">
@@ -83,7 +85,15 @@ const HomePage: React.FC = () => {
                 value={hostName}
                 onChange={(e) => setHostName(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none text-sm sm:text-base"
+              />
+              
+              <input
+                type="text"
+                value={meetingTitle}
+                onChange={(e) => setMeetingTitle(e.target.value)}
+                placeholder="Enter meeting title"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none text-sm sm:text-base"
               />
               
               <div className="flex gap-2">
@@ -92,11 +102,11 @@ const HomePage: React.FC = () => {
                   value={roomId}
                   onChange={(e) => setRoomId(e.target.value)}
                   placeholder="Enter room code"
-                  className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none"
+                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none text-sm sm:text-base"
                 />
                 <button
                   onClick={generateRandomId}
-                  className="px-4 py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors"
+                  className="px-3 sm:px-4 py-2 sm:py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
                 >
                   Generate
                 </button>
@@ -104,8 +114,8 @@ const HomePage: React.FC = () => {
               
               <button
                 onClick={createMeeting}
-                disabled={!roomId.trim() || !hostName.trim()}
-                className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+                disabled={!roomId.trim() || !hostName.trim() || !meetingTitle.trim()}
+                className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
               >
                 Create Meeting
               </button>
@@ -113,9 +123,9 @@ const HomePage: React.FC = () => {
           </div>
 
           {/* Join Meeting */}
-          <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <Users className="w-6 h-6 mr-3 text-green-400" />
+          <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 border border-gray-700">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-green-400" />
               Join Meeting
             </h2>
             <div className="space-y-4">
@@ -124,7 +134,7 @@ const HomePage: React.FC = () => {
                 value={participantName}
                 onChange={(e) => setParticipantName(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none text-sm sm:text-base"
               />
               
               <input
@@ -132,13 +142,13 @@ const HomePage: React.FC = () => {
                 value={joinRoomId}
                 onChange={(e) => setJoinRoomId(e.target.value)}
                 placeholder="Enter room code"
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none text-sm sm:text-base"
               />
               
               <button
                 onClick={joinMeeting}
                 disabled={!joinRoomId.trim() || !participantName.trim()}
-                className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+                className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
               >
                 Join Meeting
               </button>

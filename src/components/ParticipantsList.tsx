@@ -29,80 +29,80 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-        <h3 className="text-white font-semibold">Participants ({participants.length + 1})</h3>
+      <div className="p-3 sm:p-4 border-b border-gray-700 flex items-center justify-between">
+        <h3 className="text-white text-sm sm:text-base font-semibold">Participants ({participants.length + 1})</h3>
         <button
           onClick={onClose}
-          className="p-1 text-gray-400 hover:text-white transition-colors"
+          className="p-1 text-gray-400 hover:text-white transition-colors lg:hidden"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 
       {/* Participants List */}
       <div className="flex-1 overflow-y-auto">
         {/* Current User */}
-        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">
+        <div className="p-3 sm:p-4 border-b border-gray-700 flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs sm:text-sm font-semibold">
                 {localParticipantName.charAt(0).toUpperCase()}
               </span>
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-white font-medium">{localParticipantName} (You)</span>
-                {isLocalHost && <Crown className="w-4 h-4 text-yellow-500" />}
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <span className="text-white text-sm sm:text-base font-medium">{localParticipantName} (You)</span>
+                {isLocalHost && <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />}
               </div>
-              <span className="text-gray-400 text-sm">{isLocalHost ? 'Host' : 'Participant'}</span>
+              <span className="text-gray-400 text-xs sm:text-sm">{isLocalHost ? 'Host' : 'Participant'}</span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2">
             {isLocalAudioEnabled ? (
-              <Mic className="w-4 h-4 text-green-400" />
+              <Mic className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
             ) : (
-              <MicOff className="w-4 h-4 text-red-400" />
+              <MicOff className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
             )}
             {isLocalVideoEnabled ? (
-              <Video className="w-4 h-4 text-green-400" />
+              <Video className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
             ) : (
-              <VideoOff className="w-4 h-4 text-red-400" />
+              <VideoOff className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
             )}
           </div>
         </div>
 
         {/* Other Participants */}
         {participants.map((participant, index) => (
-          <div key={participant.id} className="p-4 border-b border-gray-700 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">
+          <div key={participant.id} className="p-3 sm:p-4 border-b border-gray-700 flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs sm:text-sm font-semibold">
                   {participant.name.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div>
-                <span className="text-white font-medium">{participant.name}</span>
-                <div className="text-gray-400 text-sm">Participant</div>
+                <span className="text-white text-sm sm:text-base font-medium">{participant.name}</span>
+                <div className="text-gray-400 text-xs sm:text-sm">Participant</div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               {participant.isAudioEnabled ? (
-                <Mic className="w-4 h-4 text-green-400" />
+                <Mic className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
               ) : (
-                <MicOff className="w-4 h-4 text-red-400" />
+                <MicOff className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
               )}
               {participant.isVideoEnabled ? (
-                <Video className="w-4 h-4 text-green-400" />
+                <Video className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
               ) : (
-                <VideoOff className="w-4 h-4 text-red-400" />
+                <VideoOff className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
               )}
             </div>
           </div>
         ))}
 
         {participants.length === 0 && (
-          <div className="p-8 text-center text-gray-400">
-            <p>Waiting for others to join...</p>
+          <div className="p-6 sm:p-8 text-center text-gray-400">
+            <p className="text-sm sm:text-base">Waiting for others to join...</p>
           </div>
         )}
       </div>

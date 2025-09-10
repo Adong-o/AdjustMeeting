@@ -48,20 +48,20 @@ const VideoTile: React.FC<VideoTileProps> = ({
       )}
       
       {/* Name and status overlay */}
-      <div className="absolute bottom-4 left-4 flex items-center space-x-2">
-        <span className="text-white text-sm font-medium bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full">
+      <div className="absolute bottom-2 left-2 flex items-center space-x-1 sm:space-x-2">
+        <span className="text-white text-xs sm:text-sm font-medium bg-black/80 backdrop-blur-sm px-2 py-1 rounded-full">
           {name}
         </span>
         {!isAudioEnabled && (
-          <div className="bg-red-500 p-1.5 rounded-full">
-            <MicOff className="w-3 h-3 text-white" />
+          <div className="bg-red-500 p-1 sm:p-1.5 rounded-full">
+            <MicOff className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
           </div>
         )}
       </div>
       
       {/* Connection indicator */}
-      <div className="absolute top-4 right-4">
-        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+      <div className="absolute top-2 right-2">
+        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
       </div>
     </div>
   )

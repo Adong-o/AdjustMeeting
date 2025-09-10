@@ -21,8 +21,8 @@ const ControlBar: React.FC<ControlBarProps> = ({
   onLeaveMeeting
 }) => {
   return (
-    <div className="bg-gray-800 border-t border-gray-700 px-6 py-4">
-      <div className="flex items-center justify-center space-x-4">
+    <div className="bg-gray-800 border-t border-gray-700 px-4 sm:px-6 py-3 sm:py-4">
+      <div className="flex items-center justify-center space-x-2 sm:space-x-4">
         {/* Audio Toggle */}
         <button
           onClick={onToggleAudio}
@@ -33,7 +33,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
           }`}
           title={isAudioEnabled ? 'Mute microphone' : 'Unmute microphone'}
         >
-          {isAudioEnabled ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+          {isAudioEnabled ? <Mic className="w-4 h-4 sm:w-5 sm:h-5" /> : <MicOff className="w-4 h-4 sm:w-5 sm:h-5" />}
         </button>
 
         {/* Video Toggle */}
@@ -46,7 +46,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
           }`}
           title={isVideoEnabled ? 'Turn off camera' : 'Turn on camera'}
         >
-          {isVideoEnabled ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+          {isVideoEnabled ? <Video className="w-4 h-4 sm:w-5 sm:h-5" /> : <VideoOff className="w-4 h-4 sm:w-5 sm:h-5" />}
         </button>
 
         {/* Screen Share Toggle */}
@@ -59,16 +59,16 @@ const ControlBar: React.FC<ControlBarProps> = ({
           }`}
           title={isScreenSharing ? 'Stop screen share' : 'Share screen'}
         >
-          {isScreenSharing ? <MonitorOff className="w-5 h-5" /> : <Monitor className="w-5 h-5" />}
+          {isScreenSharing ? <MonitorOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Monitor className="w-4 h-4 sm:w-5 sm:h-5" />}
         </button>
 
         {/* Leave Meeting */}
         <button
           onClick={onLeaveMeeting}
-          className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition-all duration-200 ml-8"
+          className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white transition-all duration-200 ml-4 sm:ml-8"
           title="Leave meeting"
         >
-          <Phone className="w-5 h-5 rotate-[135deg]" />
+          <Phone className="w-4 h-4 sm:w-5 sm:h-5 rotate-[135deg]" />
         </button>
       </div>
     </div>

@@ -34,9 +34,9 @@ const VideoGrid: React.FC<VideoGridProps> = ({
   // If someone is screen sharing, use a different layout
   if (isScreenSharing) {
     return (
-      <div className="h-full flex bg-gray-900">
+      <div className="h-full flex flex-col lg:flex-row bg-gray-900">
         {/* Main screen share area */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-3 sm:p-6">
           <VideoTile
             stream={localStream}
             isLocal={true}
@@ -49,11 +49,13 @@ const VideoGrid: React.FC<VideoGridProps> = ({
         </div>
         
         {/* Sidebar with participant videos */}
-        <div className="w-80 p-6 space-y-4 bg-gray-800/80 backdrop-blur-sm border-l border-gray-700">
-          <div className="text-white text-sm font-medium mb-4 flex items-center">
+        <div className="w-full lg:w-80 p-3 sm:p-6 space-y-2 sm:space-y-4 bg-gray-800/80 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-gray-700 max-h-48 lg:max-h-full overflow-y-auto">
+          <div className="text-white text-xs sm:text-sm font-medium mb-2 sm:mb-4 flex items-center">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
             Participants ({totalParticipants})
           </div>
+          
+          <div className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-2 sm:lg:space-y-4 overflow-x-auto lg:overflow-x-visible">
           {localStream && (
             <VideoTile
               stream={localStream}
@@ -61,7 +63,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
               isVideoEnabled={isLocalVideoEnabled}
               isAudioEnabled={isLocalAudioEnabled}
               name={localUserName}
-              className="w-full h-32 rounded-lg shadow-lg"
+              className="w-24 h-16 sm:w-32 sm:h-20 lg:w-full lg:h-32 rounded-lg shadow-lg flex-shrink-0"
             />
           )}
           {remoteStreams.map((stream, index) => {
@@ -74,10 +76,11 @@ const VideoGrid: React.FC<VideoGridProps> = ({
               isVideoEnabled={participant?.isVideoEnabled ?? true}
               isAudioEnabled={participant?.isAudioEnabled ?? true}
               name={participant?.name || `Participant ${index + 1}`}
-              className="w-full h-32 rounded-lg shadow-lg"
+              className="w-24 h-16 sm:w-32 sm:h-20 lg:w-full lg:h-32 rounded-lg shadow-lg flex-shrink-0"
             />
             )
           })}
+          </div>
         </div>
       </div>
     )
@@ -94,7 +97,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({
   }
 
   return (
-    <div className="h-full p-6 bg-gray-900">
+    <div className="h-full p-3 sm:p-6 bg-gray-900">
       <div className={`grid ${getGridClass()} gap-4 h-full`}>
         {/* Local video */}
         {localStream && (
