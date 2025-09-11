@@ -197,19 +197,19 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [])
 
   const handleSignalingMessage = useCallback(async (message: any) => {
-    console.log('Received message:', message.type, message)
+    console.log('🔄 Received message:', message.type, 'from:', message.from, message)
     
     switch (message.type) {
       case 'room_created':
         if (message.from !== participantIdRef.current) {
           setMeetingTitle(message.meetingTitle || 'Meeting')
-          console.log('Room created by host:', message.hostName)
+          console.log('🏠 Room created by host:', message.hostName)
         }
         break
         
       case 'join_request':
         if (isHost && message.from !== participantIdRef.current) {
-          console.log('Join request from:', message.participantName)
+          console.log('🙋 Join request from:', message.participantName, 'ID:', message.from)
           setPendingParticipants(prev => {
             const exists = prev.find(p => p.id === message.from)
             if (!exists) {
@@ -226,14 +226,14 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
       case 'join_approved':
         if (message.to === participantIdRef.current) {
-          console.log('Join approved, creating peer connection')
+          console.log('✅ Join approved! Creating peer connection with host')
           await createPeerConnection(message.from, true)
         }
         break
         
       case 'participant_joined':
         if (message.participantId !== participantIdRef.current) {
-          console.log('Participant joined:', message.participantName)
+          console.log('👥 Participant joined:', message.participantName, 'ID:', message.participantId)
           setParticipants(prev => {
             const exists = prev.find(p => p.id === message.participantId)
             if (!exists) {
@@ -255,17 +255,17 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         break
         
       case 'webrtc_offer':
-        console.log('Received WebRTC offer from:', message.from)
+        console.log('📞 Received WebRTC offer from:', message.from)
         await handleOffer(message.from, message.offer)
         break
         
       case 'webrtc_answer':
-        console.log('Received WebRTC answer from:', message.from)
+        console.log('📞 Received WebRTC answer from:', message.from)
         await handleAnswer(message.from, message.answer)
         break
         
       case 'webrtc_ice_candidate':
-        console.log('Received ICE candidate from:', message.from)
+        console.log('🧊 Received ICE candidate from:', message.from)
         await handleIceCandidate(message.from, message.candidate)
         break
         
@@ -292,7 +292,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isHost])
 
   const createPeerConnection = async (participantId: string, createOffer: boolean) => {
-    console.log('Creating peer connection with:', participantId, 'createOffer:', createOffer)
+    console.log('🔗 Creating peer connection with:', participantId, 'createOffer:', createOffer)
     
     const peerConnection = new RTCPeerConnection({
       iceServers: [
@@ -304,14 +304,14 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Add local stream tracks
     if (localStream) {
       localStream.getTracks().forEach(track => {
-        console.log('Adding track:', track.kind)
+        console.log('🎥 Adding track:', track.kind, 'to peer connection')
         peerConnection.addTrack(track, localStream)
       })
     }
 
     // Handle remote stream
     peerConnection.ontrack = (event) => {
-      console.log('Received remote track from:', participantId)
+      console.log('🎬 Received remote track from:', participantId, 'kind:', event.track.kind)
       const [remoteStream] = event.streams
       setParticipants(prev => prev.map(p => 
         p.id === participantId 
@@ -323,7 +323,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Handle ICE candidates
     peerConnection.onicecandidate = (event) => {
       if (event.candidate && signalingRef.current) {
-        console.log('Sending ICE candidate to:', participantId)
+        console.log('🧊 Sending ICE candidate to:', participantId)
         signalingRef.current.send({
           type: 'webrtc_ice_candidate',
           to: participantId,
@@ -334,7 +334,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     // Handle connection state changes
     peerConnection.onconnectionstatechange = () => {
-      console.log('Connection state with', participantId, ':', peerConnection.connectionState)
+      console.log('🔌 Connection state with', participantId, ':', peerConnection.connectionState)
     }
 
     peerConnectionsRef.current.set(participantId, peerConnection)
@@ -344,7 +344,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const offer = await peerConnection.createOffer()
         await peerConnection.setLocalDescription(offer)
         
-        console.log('Sending offer to:', participantId)
+        console.log('📤 Sending offer to:', participantId)
         if (signalingRef.current) {
           signalingRef.current.send({
             type: 'webrtc_offer',
@@ -368,7 +368,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const answer = await peerConnection.createAnswer()
         await peerConnection.setLocalDescription(answer)
         
-        console.log('Sending answer to:', participantId)
+        console.log('📤 Sending answer to:', participantId)
         if (signalingRef.current) {
           signalingRef.current.send({
             type: 'webrtc_answer',
@@ -387,7 +387,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const peerConnection = peerConnectionsRef.current.get(participantId)
       if (peerConnection) {
         await peerConnection.setRemoteDescription(answer)
-        console.log('Set remote description (answer) for:', participantId)
+        console.log('✅ Set remote description (answer) for:', participantId)
       }
     } catch (error) {
       console.error('Error handling answer:', error)
@@ -399,7 +399,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const peerConnection = peerConnectionsRef.current.get(participantId)
       if (peerConnection && peerConnection.remoteDescription) {
         await peerConnection.addIceCandidate(candidate)
-        console.log('Added ICE candidate for:', participantId)
+        console.log('✅ Added ICE candidate for:', participantId)
       }
     } catch (error) {
       console.error('Error adding ICE candidate:', error)
@@ -409,7 +409,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const admitParticipant = useCallback((participantId: string) => {
     const pending = pendingParticipants.find(p => p.id === participantId)
     if (pending && signalingRef.current) {
-      console.log('Admitting participant:', pending.name)
+      console.log('✅ Admitting participant:', pending.name, 'ID:', participantId)
       
       // Remove from pending
       setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
@@ -431,7 +431,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [pendingParticipants])
 
   const rejectParticipant = useCallback((participantId: string) => {
-    console.log('Rejecting participant:', participantId)
+    console.log('❌ Rejecting participant:', participantId)
     setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
     
     if (signalingRef.current) {
@@ -537,7 +537,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isScreenSharing])
 
   const leaveMeeting = useCallback(() => {
-    console.log('Leaving meeting')
+    console.log('👋 Leaving meeting')
     
     // Notify others
     if (signalingRef.current) {

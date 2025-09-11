@@ -50,286 +50,251 @@
 - **Persistent Sessions** - Maintain connections during the meeting
 - **Join Request System** - Hosts get instant notifications with approve/reject options
 
-## 🚀 Quick Start
+## 🚀 Quick Start Guide
 
-### For Users
+### **📋 Step-by-Step Instructions**
 
-#### **Creating a Meeting:**
-1. **Visit** [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
-2. **Fill in the Create Meeting form:**
-   - Enter your name (will show as host)
-   - Enter a meeting title (e.g., "Team Standup", "Client Call")
-   - Enter a custom room code or click "Generate" for a random one
-3. **Click "Create Meeting"**
-4. **Share the room code** with participants
-5. **Approve participants** when they request to join
+#### **🏠 Creating a Meeting (Host):**
 
-#### **Joining a Meeting:**
-1. **Get the room code** from the meeting host
-2. **Visit** [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
-3. **Fill in the Join Meeting form:**
-   - Enter your name
-   - Enter the room code
-4. **Click "Join Meeting"**
-5. **Wait for host approval** to enter the meeting
+1. **Visit the Website**
+   - Go to [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
+   - You'll see the homepage with two options
 
-#### **During the Meeting:**
-- **Camera/Mic Controls:** Click the camera or microphone buttons to toggle
-- **Screen Sharing:** Click the monitor icon to share your screen
-- **Participants List:** Click the users icon to see who's in the meeting
-- **Leave Meeting:** Click the red phone button to exit
+2. **Fill Out the Create Meeting Form:**
+   - **Your Name**: Enter your name (this will show as the host)
+   - **Meeting Title**: Enter a descriptive title (e.g., "Team Standup", "Client Call", "Family Chat")
+   - **Room Code**: Enter a custom code OR click "Generate" for a random one
+   - **Example**: Name: "John Doe", Title: "Weekly Team Meeting", Code: "TEAM2024"
 
-#### **Host Features:**
-- **Admission Control:** Orange notification appears when someone wants to join
-- **Participant Management:** See all participants and their audio/video status
-- **Meeting Control:** Full control over who can join and participate
+3. **Create the Meeting**
+   - Click the blue "Create Meeting" button
+   - Your camera and microphone will activate
+   - You'll see yourself in the video grid
+   - The meeting is now live and ready for participants
 
-### For Developers
+4. **Share the Room Code**
+   - Copy the room code from the header (click the copy icon)
+   - Share it with participants via text, email, or any messaging app
+   - Participants will use this code to request to join
 
-#### Prerequisites
+5. **Manage Join Requests**
+   - When someone wants to join, you'll see an **orange notification popup**
+   - Click "Review" or the orange admission button in the header
+   - You'll see a list of people waiting to join
+   - Click the green checkmark to **admit** or red X to **reject**
+   - Admitted participants will immediately appear in your video grid
 
-- Node.js 18+ and npm
-- Modern browser with WebRTC support
-- Basic knowledge of React and TypeScript
+#### **👥 Joining a Meeting (Participant):**
 
-#### Installation
+1. **Get the Room Code**
+   - The meeting host will share a room code with you
+   - Example: "TEAM2024" or "ABC123"
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/adjustmeeting.git
-cd adjustmeeting
+2. **Visit the Website**
+   - Go to [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
+   - Look for the "Join Meeting" section on the right
 
-# Install dependencies
-npm install
+3. **Fill Out the Join Form:**
+   - **Your Name**: Enter your name (this is what others will see)
+   - **Room Code**: Enter the exact code the host shared
+   - **Example**: Name: "Jane Smith", Code: "TEAM2024"
 
-# Start development server
-npm run dev
-```
+4. **Request to Join**
+   - Click the green "Join Meeting" button
+   - Your camera and microphone will activate
+   - You'll see a "Waiting for host approval" message
 
-The application will be available at `http://localhost:5173`
+5. **Wait for Approval**
+   - The host will see your join request
+   - Once approved, you'll automatically enter the meeting
+   - You'll see all other participants in the video grid
 
-#### Build for Production
+#### **🎮 During the Meeting:**
 
-```bash
-# Build the application
-npm run build
+**For Everyone:**
+- **🎤 Mute/Unmute**: Click the microphone button (gray = on, red = muted)
+- **📹 Camera On/Off**: Click the camera button (gray = on, red = off)
+- **🖥️ Screen Share**: Click the monitor icon to share your screen
+- **👥 Participants**: Click the users button to see who's in the meeting
+- **📞 Leave**: Click the red phone button to exit the meeting
 
-# Preview the production build
-npm run preview
-```
+**For Hosts Only:**
+- **👑 Host Controls**: You'll see a crown icon next to your name
+- **🔔 Admission Alerts**: Orange notifications when someone wants to join
+- **✅ Approve/Reject**: Control who can enter your meeting
 
-## 📱 Mobile Experience
+## 📱 Mobile Usage Guide
 
-AdjustMeeting is designed mobile-first with special attention to mobile users:
+### **📲 Mobile-Specific Features:**
 
-### **📲 Mobile Features:**
-- **Responsive Video Grid** - Adapts to portrait and landscape modes
-- **Touch-Optimized Controls** - Large buttons perfect for touch interaction
-- **Mobile-Friendly Notifications** - Join request popups sized for mobile screens
-- **Swipe-Friendly Panels** - Easy access to participants and controls
-- **Battery Optimized** - Efficient WebRTC implementation for longer battery life
+**Touch-Optimized Interface:**
+- Large buttons designed for finger taps
+- Swipe-friendly participant panels
+- Responsive video grid that adapts to screen orientation
+
+**Mobile Browser Requirements:**
+- **iOS**: Safari 11+ or Chrome 60+
+- **Android**: Chrome 60+ or Samsung Internet 8+
+- **Permissions**: Allow camera and microphone access when prompted
+
+**Mobile Tips:**
+- **Portrait Mode**: Videos stack vertically for easy viewing
+- **Landscape Mode**: Videos arrange in a grid layout
+- **Screen Sharing**: Available on most modern mobile browsers
+- **Battery Saving**: App is optimized for longer battery life
 
 ### **📐 Screen Size Support:**
-- **📱 Mobile Phones** (320px+) - Optimized single-column layouts
-- **📱 Large Phones** (375px+) - Enhanced button sizes and spacing
-- **📱 Tablets** (768px+) - Two-column layouts where appropriate
-- **💻 Desktop** (1024px+) - Full multi-column experience
+- **📱 Small Phones** (320px+): Single-column layouts
+- **📱 Large Phones** (375px+): Enhanced button sizes
+- **📱 Tablets** (768px+): Two-column layouts
+- **💻 Desktop** (1024px+): Full multi-column experience
 
-## 🏗️ Architecture
+## 🔧 Technical Requirements
 
-AdjustMeeting is built with modern web technologies:
+### **Browser Compatibility:**
+- ✅ **Chrome 60+** (Desktop & Mobile)
+- ✅ **Firefox 55+** (Desktop & Mobile)
+- ✅ **Safari 11+** (Desktop & Mobile)
+- ✅ **Edge 79+** (Desktop & Mobile)
+- ✅ **Samsung Internet 8+**
+- ✅ **iOS Safari 11+**
 
-- **Frontend:** React 18 + TypeScript + Vite
-- **Styling:** Tailwind CSS for responsive design
-- **Icons:** Lucide React for consistent iconography
-- **WebRTC:** Native browser APIs for peer-to-peer communication
-- **Routing:** React Router for navigation
-- **State Management:** React Context for WebRTC state
+### **System Requirements:**
+- **Internet**: Stable broadband connection (1 Mbps+ recommended)
+- **Hardware**: Camera and microphone (built-in or external)
+- **HTTPS**: Required for camera/microphone access (automatically provided)
 
-### Project Structure
+## 🛠️ Troubleshooting
 
+### **Common Issues & Solutions:**
+
+**❌ Camera/Microphone Not Working:**
+- ✅ **Check Permissions**: Allow camera/mic access when prompted
+- ✅ **Use HTTPS**: The site must be accessed via https:// (automatic on our site)
+- ✅ **Refresh Page**: Try refreshing and allowing permissions again
+- ✅ **Check Hardware**: Ensure camera/mic aren't being used by other apps
+
+**❌ Can't See Other Participants:**
+- ✅ **Wait for Approval**: Participants must be admitted by the host
+- ✅ **Check Connection**: Ensure stable internet on both ends
+- ✅ **Refresh Both Browsers**: Both host and participant should refresh
+- ✅ **Try Different Browser**: Switch to Chrome or Firefox if issues persist
+
+**❌ Screen Sharing Not Working:**
+- ✅ **Browser Support**: Use Chrome, Firefox, or Edge (Safari has limited support)
+- ✅ **HTTPS Required**: Automatic on our site
+- ✅ **Mobile Limitations**: Some mobile browsers don't support screen sharing
+
+**❌ Join Requests Not Showing:**
+- ✅ **Host Check**: Ensure you're the host (you'll see a crown icon)
+- ✅ **Refresh Page**: Host should refresh if not seeing requests
+- ✅ **Check Room Code**: Ensure participants are using the correct code
+
+**❌ Audio/Video Quality Issues:**
+- ✅ **Internet Speed**: Check your connection speed
+- ✅ **Close Other Apps**: Free up bandwidth by closing unnecessary applications
+- ✅ **Reduce Participants**: Fewer participants = better quality
+
+## 🎯 Usage Examples
+
+### **Business Meetings:**
 ```
-src/
-├── components/          # React components
-│   ├── HomePage.tsx     # Landing page with create/join options
-│   ├── MeetingRoom.tsx  # Main meeting interface
-│   ├── VideoGrid.tsx    # Responsive video layout management
-│   ├── VideoTile.tsx    # Individual participant video
-│   ├── ControlBar.tsx   # Meeting controls (mute, camera, etc.)
-│   ├── ParticipantsList.tsx  # Participant management
-│   └── AdmissionControl.tsx  # Host admission controls
-├── contexts/            # React contexts
-│   └── WebRTCContext.tsx     # WebRTC state management
-└── types/              # TypeScript type definitions
-```
-
-## 🤝 Contributing
-
-We welcome contributions from developers of all skill levels! Here's how you can help:
-
-### Ways to Contribute
-
-- 🐛 **Bug Reports** - Found a bug? Open an issue with details
-- 💡 **Feature Requests** - Have an idea? We'd love to hear it
-- 🔧 **Code Contributions** - Submit pull requests for fixes or features
-- 📖 **Documentation** - Help improve our docs and guides
-- 🎨 **Design** - Contribute to UI/UX improvements
-- 📱 **Mobile Testing** - Test on different devices and report issues
-- 🌍 **Translations** - Help make AdjustMeeting accessible worldwide
-
-### Getting Started with Contributing
-
-1. **Fork the repository**
-2. **Create a feature branch:** `git checkout -b feature/amazing-feature`
-3. **Make your changes** and test thoroughly on multiple devices
-4. **Commit your changes:** `git commit -m 'Add amazing feature'`
-5. **Push to the branch:** `git push origin feature/amazing-feature`
-6. **Open a Pull Request**
-
-### Development Guidelines
-
-- Follow the existing code style and conventions
-- Test on mobile devices and different screen sizes
-- Write clear, descriptive commit messages
-- Add tests for new features when applicable
-- Update documentation for any API changes
-- Ensure your code works across different browsers
-
-## 🛠️ Technical Details
-
-### WebRTC Implementation
-
-AdjustMeeting uses WebRTC for peer-to-peer communication:
-
-- **getUserMedia()** - Access camera and microphone
-- **getDisplayMedia()** - Screen sharing functionality
-- **RTCPeerConnection** - Direct peer-to-peer connections
-- **MediaStream** - Handle audio/video streams
-
-### Responsive Design System
-
-- **Mobile-First Approach** - Designed for mobile, enhanced for desktop
-- **Tailwind CSS** - Utility-first CSS framework for rapid responsive development
-- **Breakpoint System:**
-  - `sm:` 640px+ (Large phones)
-  - `md:` 768px+ (Tablets)
-  - `lg:` 1024px+ (Desktop)
-  - `xl:` 1280px+ (Large desktop)
-
-### Browser Compatibility
-
-- ✅ Chrome 60+ (Mobile & Desktop)
-- ✅ Firefox 55+ (Mobile & Desktop)
-- ✅ Safari 11+ (Mobile & Desktop)
-- ✅ Edge 79+ (Mobile & Desktop)
-- ✅ Samsung Internet 8+
-- ✅ iOS Safari 11+
-- ✅ Chrome Mobile 60+
-
-### Security Features
-
-- Peer-to-peer connections (no server-side data storage)
-- HTTPS required for camera/microphone access
-- Host-controlled meeting admission
-- No personal data collection
-
-## 📱 Usage Examples
-
-### Creating a Meeting
-
-```javascript
-// Example: Meeting creation flow
-const meetingConfig = {
-  roomId: 'team-standup-monday',
-  hostName: 'John Doe',
-  meetingTitle: 'Weekly Team Standup',
-  requireAdmission: true
-};
+Host: "Sarah Johnson"
+Title: "Q4 Planning Meeting"
+Code: "Q4PLAN2024"
+Participants: Team members join using the code
 ```
 
-### Joining a Meeting
-
-```javascript
-// Example: Join meeting flow
-const joinRequest = {
-  roomId: 'team-standup-monday',
-  participantName: 'Jane Smith',
-  requestTime: new Date()
-};
+### **Family Calls:**
+```
+Host: "Mom"
+Title: "Sunday Family Chat"
+Code: "FAMILY123"
+Participants: Family members join from different locations
 ```
 
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file for custom configuration:
-
-```env
-VITE_APP_NAME=AdjustMeeting
-VITE_DEFAULT_ROOM_PREFIX=meeting-
-VITE_MAX_PARTICIPANTS=10
+### **Study Groups:**
+```
+Host: "Alex"
+Title: "Math Study Session"
+Code: "MATH101"
+Participants: Classmates join to study together
 ```
 
-### Customization
+## 🔒 Privacy & Security
 
-You can customize the application by modifying:
+### **Your Privacy Matters:**
+- **No Registration**: No personal information stored
+- **Peer-to-Peer**: Direct connections between participants
+- **No Recording**: We don't record or store your meetings
+- **Temporary Data**: Room codes expire when meetings end
+- **Local Storage**: Only temporary connection data stored locally
 
-- `tailwind.config.js` - Colors, fonts, and responsive breakpoints
-- `src/consts.ts` - Application constants
-- `src/components/` - UI components and layout
+### **Security Features:**
+- **Host Control**: Only hosts can admit participants
+- **HTTPS Encryption**: All connections are encrypted
+- **No Server Storage**: No video/audio data passes through our servers
+- **WebRTC Security**: Industry-standard peer-to-peer encryption
 
-## 🚀 Deployment
+## 🚀 Advanced Features
 
-### Deploy to Netlify (Recommended)
+### **Screen Sharing:**
+- Click the monitor icon in the control bar
+- Select which screen or application to share
+- All participants will see your shared screen
+- Click again to stop sharing
 
-1. Fork this repository
-2. Connect your GitHub account to Netlify
-3. Select the repository and deploy
-4. Your app will be live at `https://your-app.netlify.app`
+### **Meeting Management:**
+- **Participant List**: See everyone in the meeting with their status
+- **Audio/Video Indicators**: Green = on, Red = muted/off
+- **Host Controls**: Crown icon indicates meeting host
+- **Real-time Updates**: Status changes appear instantly
 
-### Deploy to Vercel
+### **Responsive Design:**
+- **Auto-Layout**: Video grid adjusts to screen size and participant count
+- **Touch-Friendly**: Large buttons for mobile devices
+- **Orientation Support**: Works in both portrait and landscape modes
 
-```bash
-npm install -g vercel
-vercel --prod
-```
+## 🌍 Global Accessibility
 
-### Self-Hosting
+### **Works Worldwide:**
+- **No Geographic Restrictions**: Use from anywhere
+- **Multiple Time Zones**: Perfect for international meetings
+- **Low Bandwidth Mode**: Optimized for slower connections
+- **Mobile Data Friendly**: Efficient data usage
 
-```bash
-npm run build
-# Serve the 'dist' folder with any static file server
-```
+### **Accessibility Features:**
+- **Keyboard Navigation**: Full keyboard support
+- **Screen Reader Compatible**: Works with assistive technologies
+- **High Contrast**: Clear visual indicators
+- **Large Touch Targets**: Easy to use for everyone
 
-## 🐛 Troubleshooting
+## 📊 Performance Tips
 
-### Common Issues
+### **For Best Experience:**
+- **Use Chrome or Firefox** for optimal performance
+- **Close unnecessary tabs** to free up resources
+- **Use wired internet** when possible for stability
+- **Good lighting** improves video quality
+- **Quiet environment** for better audio
 
-**Camera/Microphone not working:**
-- Ensure you're using HTTPS (required for media access)
-- Check browser permissions for camera/microphone
-- Try refreshing the page
+### **Bandwidth Usage:**
+- **2 Participants**: ~1 Mbps upload/download
+- **4 Participants**: ~2 Mbps upload/download
+- **6+ Participants**: ~3+ Mbps upload/download
 
-**Mobile issues:**
-- Ensure you're using a supported mobile browser
-- Check that camera/microphone permissions are granted
-- Try switching between portrait and landscape modes
+## 🤝 Support & Community
 
-**Screen sharing not working:**
-- Screen sharing requires HTTPS
-- Some mobile browsers don't support screen sharing
-- Check browser compatibility
+### **Getting Help:**
+- **Documentation**: This README covers most use cases
+- **GitHub Issues**: Report bugs or request features
+- **Community**: Join discussions with other users
 
-**Connection issues:**
-- Ensure both participants have stable internet
-- Try refreshing both browsers
-- Check firewall settings
-
-### Getting Help
-
-- 📖 Check our [Wiki](https://github.com/yourusername/adjustmeeting/wiki)
-- 💬 Join our [Discussions](https://github.com/yourusername/adjustmeeting/discussions)
-- 🐛 Report bugs in [Issues](https://github.com/yourusername/adjustmeeting/issues)
+### **Contributing:**
+- **Open Source**: Full source code available
+- **Pull Requests**: Contributions welcome
+- **Feature Requests**: Suggest new features
+- **Bug Reports**: Help us improve the platform
 
 ## 📄 License
 
@@ -343,14 +308,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Lucide for clean, consistent icons
 - All our contributors who make this project better
 
-## 🌟 Star History
-
-If you find AdjustMeeting useful, please consider giving it a star! ⭐
-
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/adjustmeeting&type=Date)](https://star-history.com/#yourusername/adjustmeeting&Date)
-
 ---
 
 **Made with ❤️ by the open source community**
 
-[Website](https://adjustmeeting.netlify.app) • [Documentation](https://docs.adjustmeeting.com) • [Community](https://github.com/yourusername/adjustmeeting/discussions) • [Twitter](https://twitter.com/adongoabc)
+[Website](https://adjustmeeting.netlify.app) • [GitHub](https://github.com/yourusername/adjustmeeting) • [Issues](https://github.com/yourusername/adjustmeeting/issues)

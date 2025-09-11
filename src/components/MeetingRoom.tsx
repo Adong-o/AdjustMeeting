@@ -41,6 +41,7 @@ const MeetingRoom: React.FC = () => {
   useEffect(() => {
     if (roomId) {
       const meetingData = location.state || {}
+      console.log('🚀 Initializing meeting room with data:', meetingData)
       setMeetingInfo(meetingData)
       initializeRoom(roomId, meetingData)
     }
@@ -49,6 +50,7 @@ const MeetingRoom: React.FC = () => {
   // Auto-show admission control when there are pending participants
   useEffect(() => {
     if (isHost && pendingParticipants.length > 0 && !showAdmission) {
+      console.log('👋 New join request detected, showing notification')
       setShowJoinNotification(true)
       // Auto-hide notification after 5 seconds
       const timer = setTimeout(() => {
@@ -57,6 +59,12 @@ const MeetingRoom: React.FC = () => {
       return () => clearTimeout(timer)
     }
   }, [isHost, pendingParticipants.length, showAdmission])
+
+  // Debug logging for participants
+  useEffect(() => {
+    console.log('👥 Current participants:', participants.length)
+    console.log('⏳ Pending participants:', pendingParticipants.length)
+  }, [participants.length, pendingParticipants.length])
 
   const copyRoomId = async () => {
     if (roomId) {
