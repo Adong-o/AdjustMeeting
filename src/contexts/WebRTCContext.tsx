@@ -24,6 +24,7 @@ interface WebRTCContextType {
   isScreenSharing: boolean
   isHost: boolean
   roomId: string | null
+  meetingTitle: string
   initializeRoom: (roomId: string, meetingData?: any) => Promise<void>
   toggleAudio: () => void
   toggleVideo: () => void
@@ -43,11 +44,13 @@ export const useWebRTC = () => {
   return context
 }
 
-// Simple signaling server simulation using localStorage for demo
-class SimpleSignaling {
+// Enhanced signaling system using localStorage with real-time polling
+class EnhancedSignaling {
   private roomId: string
   private participantId: string
   private onMessage: (message: any) => void
+  private pollInterval: NodeJS.Timeout | null = null
+  private lastMessageTime: number = 0
 
   constructor(roomId: string, participantId: string, onMessage: (message: any) => void) {
     this.roomId = roomId
@@ -57,15 +60,20 @@ class SimpleSignaling {
   }
 
   private startListening() {
-    // Poll for messages every 500ms (in real app, use WebSocket)
-    setInterval(() => {
+    // Poll every 200ms for faster real-time communication
+    this.pollInterval = setInterval(() => {
       const messages = this.getMessages()
-      messages.forEach(message => {
-        if (message.to === this.participantId || message.to === 'all') {
-          this.onMessage(message)
-        }
+      const newMessages = messages.filter(msg => 
+        msg.timestamp > this.lastMessageTime && 
+        msg.from !== this.participantId &&
+        (msg.to === this.participantId || msg.to === 'all')
+      )
+      
+      newMessages.forEach(message => {
+        this.onMessage(message)
+        this.lastMessageTime = Math.max(this.lastMessageTime, message.timestamp)
       })
-    }, 500)
+    }, 200)
   }
 
   private getMessages(): any[] {
@@ -76,23 +84,29 @@ class SimpleSignaling {
 
   private addMessage(message: any) {
     const messages = this.getMessages()
-    messages.push({ ...message, timestamp: Date.now() })
-    // Keep only last 100 messages
-    if (messages.length > 100) {
-      messages.splice(0, messages.length - 100)
+    const newMessage = { 
+      ...message, 
+      timestamp: Date.now(),
+      from: this.participantId,
+      id: Math.random().toString(36).substr(2, 9)
+    }
+    messages.push(newMessage)
+    
+    // Keep only last 50 messages for performance
+    if (messages.length > 50) {
+      messages.splice(0, messages.length - 50)
     }
     localStorage.setItem(`meeting_${this.roomId}_messages`, JSON.stringify(messages))
   }
 
   send(message: any) {
-    this.addMessage({
-      ...message,
-      from: this.participantId
-    })
+    this.addMessage(message)
   }
 
   cleanup() {
-    // In real app, close WebSocket connection
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval)
+    }
   }
 }
 
@@ -108,19 +122,30 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [meetingTitle, setMeetingTitle] = useState<string>('Meeting')
   
   const originalStreamRef = useRef<MediaStream | null>(null)
-  const signalingRef = useRef<SimpleSignaling | null>(null)
+  const signalingRef = useRef<EnhancedSignaling | null>(null)
   const participantIdRef = useRef<string>(Math.random().toString(36).substr(2, 9))
   const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map())
+  const currentUserNameRef = useRef<string>('')
 
   const initializeRoom = useCallback(async (roomId: string, meetingData?: any) => {
     try {
+      console.log('Initializing room:', roomId, meetingData)
       setRoomId(roomId)
       setIsHost(meetingData?.isHost || false)
+      setMeetingTitle(meetingData?.meetingTitle || 'Meeting')
+      currentUserNameRef.current = meetingData?.isHost ? meetingData.hostName : meetingData.participantName
       
-      // Get user media
+      // Get user media with better constraints
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
+        video: { 
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: 'user'
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true
+        }
       })
       
       setLocalStream(stream)
@@ -128,15 +153,19 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsAudioEnabled(true)
       setIsVideoEnabled(true)
       
-      // Initialize signaling
-      signalingRef.current = new SimpleSignaling(
+      // Initialize enhanced signaling
+      signalingRef.current = new EnhancedSignaling(
         roomId,
         participantIdRef.current,
         handleSignalingMessage
       )
       
-      // If host, announce room creation
+      // Clear any existing room data
+      localStorage.removeItem(`meeting_${roomId}_messages`)
+      
+      // Announce presence
       if (meetingData?.isHost) {
+        console.log('Creating room as host')
         signalingRef.current.send({
           type: 'room_created',
           to: 'all',
@@ -145,7 +174,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           meetingTitle: meetingData.meetingTitle
         })
       } else {
-        // If participant, request to join
+        console.log('Requesting to join as participant')
         signalingRef.current.send({
           type: 'join_request',
           to: 'all',
@@ -154,35 +183,33 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         })
       }
       
-      console.log(`Room ${roomId} initialized successfully`)
-      
     } catch (error) {
-      console.error('Error accessing media devices:', error)
+      console.error('Error initializing room:', error)
+      // Fallback to audio only
       try {
-        const audioStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: false
-        })
+        const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
         setLocalStream(audioStream)
         setIsVideoEnabled(false)
       } catch (audioError) {
-        console.error('Error accessing audio device:', audioError)
+        console.error('Error accessing audio:', audioError)
       }
     }
   }, [])
 
   const handleSignalingMessage = useCallback(async (message: any) => {
+    console.log('Received message:', message.type, message)
+    
     switch (message.type) {
       case 'room_created':
         if (message.from !== participantIdRef.current) {
-          // Store host info
           setMeetingTitle(message.meetingTitle || 'Meeting')
+          console.log('Room created by host:', message.hostName)
         }
         break
         
       case 'join_request':
         if (isHost && message.from !== participantIdRef.current) {
-          // Add to pending participants
+          console.log('Join request from:', message.participantName)
           setPendingParticipants(prev => {
             const exists = prev.find(p => p.id === message.from)
             if (!exists) {
@@ -199,65 +226,92 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
       case 'join_approved':
         if (message.to === participantIdRef.current) {
-          // Start WebRTC connection with host
+          console.log('Join approved, creating peer connection')
           await createPeerConnection(message.from, true)
         }
         break
         
       case 'participant_joined':
-        // Add participant to list
-        setParticipants(prev => {
-          const exists = prev.find(p => p.id === message.participantId)
-          if (!exists) {
-            return [...prev, {
-              id: message.participantId,
-              name: message.participantName,
-              isAudioEnabled: true,
-              isVideoEnabled: true
-            }]
+        if (message.participantId !== participantIdRef.current) {
+          console.log('Participant joined:', message.participantName)
+          setParticipants(prev => {
+            const exists = prev.find(p => p.id === message.participantId)
+            if (!exists) {
+              return [...prev, {
+                id: message.participantId,
+                name: message.participantName,
+                isAudioEnabled: true,
+                isVideoEnabled: true
+              }]
+            }
+            return prev
+          })
+          
+          // Create peer connection if we're host
+          if (isHost) {
+            await createPeerConnection(message.participantId, true)
           }
-          return prev
-        })
-        
-        // If we're host, create connection to new participant
-        if (isHost) {
-          await createPeerConnection(message.participantId, true)
         }
         break
         
       case 'webrtc_offer':
+        console.log('Received WebRTC offer from:', message.from)
         await handleOffer(message.from, message.offer)
         break
         
       case 'webrtc_answer':
+        console.log('Received WebRTC answer from:', message.from)
         await handleAnswer(message.from, message.answer)
         break
         
       case 'webrtc_ice_candidate':
+        console.log('Received ICE candidate from:', message.from)
         await handleIceCandidate(message.from, message.candidate)
         break
         
       case 'participant_left':
+        console.log('Participant left:', message.participantId)
         setParticipants(prev => prev.filter(p => p.id !== message.participantId))
-        peerConnectionsRef.current.delete(message.participantId)
+        const pc = peerConnectionsRef.current.get(message.participantId)
+        if (pc) {
+          pc.close()
+          peerConnectionsRef.current.delete(message.participantId)
+        }
+        break
+
+      case 'media_state_changed':
+        if (message.participantId !== participantIdRef.current) {
+          setParticipants(prev => prev.map(p => 
+            p.id === message.participantId 
+              ? { ...p, isAudioEnabled: message.isAudioEnabled, isVideoEnabled: message.isVideoEnabled }
+              : p
+          ))
+        }
         break
     }
   }, [isHost])
 
   const createPeerConnection = async (participantId: string, createOffer: boolean) => {
+    console.log('Creating peer connection with:', participantId, 'createOffer:', createOffer)
+    
     const peerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
     })
 
-    // Add local stream
+    // Add local stream tracks
     if (localStream) {
       localStream.getTracks().forEach(track => {
+        console.log('Adding track:', track.kind)
         peerConnection.addTrack(track, localStream)
       })
     }
 
     // Handle remote stream
     peerConnection.ontrack = (event) => {
+      console.log('Received remote track from:', participantId)
       const [remoteStream] = event.streams
       setParticipants(prev => prev.map(p => 
         p.id === participantId 
@@ -269,6 +323,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Handle ICE candidates
     peerConnection.onicecandidate = (event) => {
       if (event.candidate && signalingRef.current) {
+        console.log('Sending ICE candidate to:', participantId)
         signalingRef.current.send({
           type: 'webrtc_ice_candidate',
           to: participantId,
@@ -277,58 +332,85 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     }
 
+    // Handle connection state changes
+    peerConnection.onconnectionstatechange = () => {
+      console.log('Connection state with', participantId, ':', peerConnection.connectionState)
+    }
+
     peerConnectionsRef.current.set(participantId, peerConnection)
 
     if (createOffer) {
-      const offer = await peerConnection.createOffer()
-      await peerConnection.setLocalDescription(offer)
-      
-      if (signalingRef.current) {
-        signalingRef.current.send({
-          type: 'webrtc_offer',
-          to: participantId,
-          offer: offer
-        })
+      try {
+        const offer = await peerConnection.createOffer()
+        await peerConnection.setLocalDescription(offer)
+        
+        console.log('Sending offer to:', participantId)
+        if (signalingRef.current) {
+          signalingRef.current.send({
+            type: 'webrtc_offer',
+            to: participantId,
+            offer: offer
+          })
+        }
+      } catch (error) {
+        console.error('Error creating offer:', error)
       }
     }
   }
 
   const handleOffer = async (participantId: string, offer: RTCSessionDescriptionInit) => {
-    await createPeerConnection(participantId, false)
-    const peerConnection = peerConnectionsRef.current.get(participantId)
-    
-    if (peerConnection) {
-      await peerConnection.setRemoteDescription(offer)
-      const answer = await peerConnection.createAnswer()
-      await peerConnection.setLocalDescription(answer)
+    try {
+      await createPeerConnection(participantId, false)
+      const peerConnection = peerConnectionsRef.current.get(participantId)
       
-      if (signalingRef.current) {
-        signalingRef.current.send({
-          type: 'webrtc_answer',
-          to: participantId,
-          answer: answer
-        })
+      if (peerConnection) {
+        await peerConnection.setRemoteDescription(offer)
+        const answer = await peerConnection.createAnswer()
+        await peerConnection.setLocalDescription(answer)
+        
+        console.log('Sending answer to:', participantId)
+        if (signalingRef.current) {
+          signalingRef.current.send({
+            type: 'webrtc_answer',
+            to: participantId,
+            answer: answer
+          })
+        }
       }
+    } catch (error) {
+      console.error('Error handling offer:', error)
     }
   }
 
   const handleAnswer = async (participantId: string, answer: RTCSessionDescriptionInit) => {
-    const peerConnection = peerConnectionsRef.current.get(participantId)
-    if (peerConnection) {
-      await peerConnection.setRemoteDescription(answer)
+    try {
+      const peerConnection = peerConnectionsRef.current.get(participantId)
+      if (peerConnection) {
+        await peerConnection.setRemoteDescription(answer)
+        console.log('Set remote description (answer) for:', participantId)
+      }
+    } catch (error) {
+      console.error('Error handling answer:', error)
     }
   }
 
   const handleIceCandidate = async (participantId: string, candidate: RTCIceCandidateInit) => {
-    const peerConnection = peerConnectionsRef.current.get(participantId)
-    if (peerConnection) {
-      await peerConnection.addIceCandidate(candidate)
+    try {
+      const peerConnection = peerConnectionsRef.current.get(participantId)
+      if (peerConnection && peerConnection.remoteDescription) {
+        await peerConnection.addIceCandidate(candidate)
+        console.log('Added ICE candidate for:', participantId)
+      }
+    } catch (error) {
+      console.error('Error adding ICE candidate:', error)
     }
   }
 
   const admitParticipant = useCallback((participantId: string) => {
     const pending = pendingParticipants.find(p => p.id === participantId)
     if (pending && signalingRef.current) {
+      console.log('Admitting participant:', pending.name)
+      
       // Remove from pending
       setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
       
@@ -349,6 +431,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [pendingParticipants])
 
   const rejectParticipant = useCallback((participantId: string) => {
+    console.log('Rejecting participant:', participantId)
     setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
     
     if (signalingRef.current) {
@@ -365,9 +448,20 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (audioTrack) {
         audioTrack.enabled = !audioTrack.enabled
         setIsAudioEnabled(audioTrack.enabled)
+        
+        // Notify other participants
+        if (signalingRef.current) {
+          signalingRef.current.send({
+            type: 'media_state_changed',
+            to: 'all',
+            participantId: participantIdRef.current,
+            isAudioEnabled: audioTrack.enabled,
+            isVideoEnabled: isVideoEnabled
+          })
+        }
       }
     }
-  }, [localStream])
+  }, [localStream, isVideoEnabled])
 
   const toggleVideo = useCallback(() => {
     if (localStream) {
@@ -375,9 +469,20 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (videoTrack) {
         videoTrack.enabled = !videoTrack.enabled
         setIsVideoEnabled(videoTrack.enabled)
+        
+        // Notify other participants
+        if (signalingRef.current) {
+          signalingRef.current.send({
+            type: 'media_state_changed',
+            to: 'all',
+            participantId: participantIdRef.current,
+            isAudioEnabled: isAudioEnabled,
+            isVideoEnabled: videoTrack.enabled
+          })
+        }
       }
     }
-  }, [localStream])
+  }, [localStream, isAudioEnabled])
 
   const toggleScreenShare = useCallback(async () => {
     try {
@@ -390,7 +495,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setLocalStream(screenStream)
         setIsScreenSharing(true)
         
-        // Replace tracks in all peer connections
+        // Replace video track in all peer connections
         peerConnectionsRef.current.forEach(peerConnection => {
           const videoTrack = screenStream.getVideoTracks()[0]
           const sender = peerConnection.getSenders().find(s => 
@@ -401,6 +506,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           }
         })
         
+        // Handle screen share end
         screenStream.getVideoTracks()[0].addEventListener('ended', () => {
           if (originalStreamRef.current) {
             setLocalStream(originalStreamRef.current)
@@ -431,6 +537,8 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isScreenSharing])
 
   const leaveMeeting = useCallback(() => {
+    console.log('Leaving meeting')
+    
     // Notify others
     if (signalingRef.current) {
       signalingRef.current.send({
@@ -448,6 +556,9 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Stop local stream
     if (localStream) {
       localStream.getTracks().forEach(track => track.stop())
+    }
+    if (originalStreamRef.current) {
+      originalStreamRef.current.getTracks().forEach(track => track.stop())
     }
     
     // Reset state
@@ -479,6 +590,7 @@ export const WebRTCProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isScreenSharing,
     isHost,
     roomId,
+    meetingTitle,
     initializeRoom,
     toggleAudio,
     toggleVideo,

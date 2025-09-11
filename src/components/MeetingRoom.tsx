@@ -6,6 +6,7 @@ import ControlBar from './ControlBar'
 import ParticipantsList from './ParticipantsList'
 import AdmissionControl from './AdmissionControl'
 import { Copy, Users, UserCheck } from 'lucide-react'
+import { X } from 'lucide-react'
 
 const MeetingRoom: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>()
@@ -178,21 +179,21 @@ const MeetingRoom: React.FC = () => {
       )}
       
       {/* Join Request Notification */}
-      {showJoinNotification && isHost && pendingParticipants.length > 0 && (
-        <div className="fixed top-4 right-4 z-50 bg-orange-600 text-white p-4 rounded-lg shadow-lg border border-orange-500 max-w-sm">
+      {showJoinNotification && isHost && pendingParticipants.length > 0 && !showAdmission && (
+        <div className="fixed top-4 right-4 z-50 bg-orange-600 text-white p-3 sm:p-4 rounded-lg shadow-lg border border-orange-500 max-w-xs sm:max-w-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <UserCheck className="w-5 h-5" />
-              <span className="font-semibold">Join Request</span>
+              <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-semibold text-sm sm:text-base">Join Request</span>
             </div>
             <button
               onClick={() => setShowJoinNotification(false)}
               className="text-orange-200 hover:text-white"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
           </div>
-          <p className="text-sm mb-3">
+          <p className="text-xs sm:text-sm mb-3">
             {pendingParticipants[0]?.name} wants to join the meeting
           </p>
           <div className="flex space-x-2">
@@ -201,7 +202,7 @@ const MeetingRoom: React.FC = () => {
                 setShowAdmission(true)
                 setShowJoinNotification(false)
               }}
-              className="flex-1 bg-white text-orange-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+              className="flex-1 bg-white text-orange-600 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium hover:bg-gray-100 transition-colors"
             >
               Review
             </button>
