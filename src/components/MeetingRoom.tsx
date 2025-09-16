@@ -20,6 +20,7 @@ const MeetingRoom: React.FC = () => {
     isVideoEnabled, 
     isScreenSharing,
     isHost,
+    connectionStatus,
     initializeRoom,
     toggleAudio,
     toggleVideo,
@@ -64,6 +65,7 @@ const MeetingRoom: React.FC = () => {
   useEffect(() => {
     console.log('👥 Current participants:', participants.length)
     console.log('⏳ Pending participants:', pendingParticipants.length)
+    console.log('🔌 Connection status:', connectionStatus)
   }, [participants.length, pendingParticipants.length])
 
   const copyRoomId = async () => {
@@ -96,6 +98,7 @@ const MeetingRoom: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <h1 className="text-lg sm:text-xl font-semibold text-white">AdjustMeeting</h1>
               <div className="text-sm sm:text-base text-gray-300">{meetingInfo.meetingTitle}</div>
+              <div className="text-xs text-gray-400">Status: {connectionStatus}</div>
             </div>
             
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">

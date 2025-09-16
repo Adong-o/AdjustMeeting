@@ -283,6 +283,26 @@ Participants: Classmates join to study together
 - **4 Participants**: ~2 Mbps upload/download
 - **6+ Participants**: ~3+ Mbps upload/download
 
+## ⚠️ Current Limitations
+
+### **Cross-Device Communication:**
+The current version uses a simplified signaling system that works best for:
+- **Same Network Testing**: Multiple devices on the same WiFi
+- **Local Development**: Testing with multiple browser tabs
+- **Demo Purposes**: Showcasing the interface and features
+
+### **For Production Use, You Would Need:**
+- **Dedicated Signaling Server**: WebSocket server for real-time messaging
+- **TURN Servers**: For NAT traversal in complex network environments
+- **Database Backend**: For persistent room management
+- **User Authentication**: For secure meeting access
+
+### **Technical Details:**
+The app currently uses a hybrid approach:
+1. **JSONBin API** (when available) for cross-device signaling
+2. **LocalStorage fallback** for same-device testing
+3. **WebRTC** for actual peer-to-peer video/audio connections
+
 ## 🤝 Support & Community
 
 ### **Getting Help:**
