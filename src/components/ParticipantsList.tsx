@@ -44,7 +44,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
         {/* Current User */}
         <div className="p-3 sm:p-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
               <span className="text-white text-xs sm:text-sm font-semibold">
                 {localParticipantName.charAt(0).toUpperCase()}
               </span>
@@ -75,7 +75,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
         {participants.map((participant, index) => (
           <div key={participant.id} className="p-3 sm:p-4 border-b border-gray-700 flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs sm:text-sm font-semibold">
                   {participant.name.charAt(0).toUpperCase()}
                 </span>

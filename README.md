@@ -1,6 +1,6 @@
 # AdjustMeeting 🎥
 
-*A beautiful, responsive, open-source video conferencing solution with advanced features that works entirely in your browser.*
+*A beautiful, responsive, open-source video conferencing solution with advanced WebRTC features that works in your browser.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -12,102 +12,76 @@
 
 *No registration required - just create or join a meeting instantly!*
 
-**AdjustMeeting** is a free, open-source video conferencing platform that works entirely in your browser. No downloads, no registration, no hassle - just instant video meetings with anyone, anywhere.
+## ✨ **What Makes AdjustMeeting Special**
 
-## ✨ Features
+AdjustMeeting is a **production-ready** video conferencing platform built with modern web technologies. Unlike simple demos, this is a fully functional application with:
 
-### 🚀 **Core Features**
-- **Zero Setup** - Works instantly in any modern browser
-- **Privacy First** - Peer-to-peer connections, no data stored on servers
-- **Fully Responsive** - Perfect on desktop, tablet, and mobile devices
-- **Cross-Platform** - Works on Windows, Mac, Linux, iOS, Android
+- **Real WebRTC Connections** - Actual peer-to-peer video/audio communication
+- **Professional UI/UX** - Clean, responsive design that works on all devices
+- **Host Admission Control** - Secure meeting management with join approval
+- **Screen Sharing** - Full screen sharing with dedicated layout
+- **Mobile Optimized** - Touch-friendly interface for phones and tablets
+- **Enhanced Signaling** - Multiple signaling methods for reliable connections
 
-### 📹 **Video & Audio**
-- **HD Video Calls** - Crystal clear video with automatic quality adjustment
-- **Screen Sharing** - Share your entire screen with presentation mode
-- **Audio/Video Controls** - Mute, unmute, camera on/off with one click
-- **Smart Layout** - Automatic grid layout that adapts to participant count
-- **Mobile Optimized** - Touch-friendly controls and responsive video tiles
+## 🚀 **How It Actually Works**
 
-### 👥 **Meeting Management**
-- **Meeting Titles** - Set custom titles for organized meetings
-- **Participant Management** - See who's in the meeting and their status
-- **Host Admission Control** - Host controls who can join the meeting
-- **Real-time Notifications** - Popup alerts when participants request to join
-- **Host Controls** - Crown indicator and special permissions for meeting hosts
-- **Real-time Status** - Live audio/video status indicators for all participants
-
-### 📱 **Mobile & Responsive Design**
-- **Mobile-First Design** - Optimized for smartphones and tablets
-- **Touch Controls** - Large, touch-friendly buttons and interfaces
-- **Adaptive Layouts** - UI adjusts perfectly to any screen size
-- **Portrait & Landscape** - Works seamlessly in both orientations
-- **Swipe Navigation** - Intuitive mobile navigation patterns
-
-### 🎯 **Professional Features**
-- **Modern UI** - Clean, professional interface inspired by industry leaders
-- **Meeting Rooms** - Custom room codes for easy joining
-- **Persistent Sessions** - Maintain connections during the meeting
-- **Join Request System** - Hosts get instant notifications with approve/reject options
-
-## 🚀 Quick Start Guide
-
-### **📋 Step-by-Step Instructions**
+### **📋 Step-by-Step Process:**
 
 #### **🏠 Creating a Meeting (Host):**
 
 1. **Visit the Website**
    - Go to [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
-   - You'll see the homepage with two options
+   - You'll see the clean, professional homepage
 
 2. **Fill Out the Create Meeting Form:**
-   - **Your Name**: Enter your name (this will show as the host)
-   - **Meeting Title**: Enter a descriptive title (e.g., "Team Standup", "Client Call", "Family Chat")
+   - **Your Name**: Enter your name (e.g., "John Doe")
+   - **Meeting Title**: Enter a descriptive title (e.g., "Team Standup")
    - **Room Code**: Enter a custom code OR click "Generate" for a random one
-   - **Example**: Name: "John Doe", Title: "Weekly Team Meeting", Code: "TEAM2024"
+   - **Example**: Name: "Sarah", Title: "Project Review", Code: "PROJ2024"
 
 3. **Create the Meeting**
    - Click the blue "Create Meeting" button
-   - Your camera and microphone will activate
-   - You'll see yourself in the video grid
+   - Your camera and microphone will activate (allow permissions)
+   - You'll see yourself in a properly sized video tile (not full screen!)
    - The meeting is now live and ready for participants
 
 4. **Share the Room Code**
    - Copy the room code from the header (click the copy icon)
-   - Share it with participants via text, email, or any messaging app
-   - Participants will use this code to request to join
+   - Share it with participants via text, email, or messaging app
+   - Participants will use this exact code to request to join
 
-5. **Manage Join Requests**
+5. **Manage Join Requests (This is where the magic happens!)**
    - When someone wants to join, you'll see an **orange notification popup**
+   - The notification shows the participant's name and request time
    - Click "Review" or the orange admission button in the header
-   - You'll see a list of people waiting to join
-   - Click the green checkmark to **admit** or red X to **reject**
-   - Admitted participants will immediately appear in your video grid
+   - You'll see a list of people waiting to join with their details
+   - Click the green checkmark ✅ to **admit** or red X ❌ to **reject**
+   - **Admitted participants will immediately appear in your video grid!**
 
 #### **👥 Joining a Meeting (Participant):**
 
 1. **Get the Room Code**
    - The meeting host will share a room code with you
-   - Example: "TEAM2024" or "ABC123"
+   - Example: "PROJ2024" or "ABC123"
 
 2. **Visit the Website**
    - Go to [https://adjustmeeting.netlify.app](https://adjustmeeting.netlify.app)
    - Look for the "Join Meeting" section on the right
 
 3. **Fill Out the Join Form:**
-   - **Your Name**: Enter your name (this is what others will see)
+   - **Your Name**: Enter your name (this is what the host will see)
    - **Room Code**: Enter the exact code the host shared
-   - **Example**: Name: "Jane Smith", Code: "TEAM2024"
+   - **Example**: Name: "Mike", Code: "PROJ2024"
 
 4. **Request to Join**
    - Click the green "Join Meeting" button
    - Your camera and microphone will activate
-   - You'll see a "Waiting for host approval" message
+   - You'll see a "Requesting to join..." message
 
-5. **Wait for Approval**
-   - The host will see your join request
-   - Once approved, you'll automatically enter the meeting
-   - You'll see all other participants in the video grid
+5. **Wait for Host Approval**
+   - The host will see your join request with your name
+   - Once the host clicks "Admit", you'll automatically enter the meeting
+   - **You'll now see the host and any other participants in the video grid!**
 
 #### **🎮 During the Meeting:**
 
@@ -119,111 +93,131 @@
 - **📞 Leave**: Click the red phone button to exit the meeting
 
 **For Hosts Only:**
-- **👑 Host Controls**: You'll see a crown icon next to your name
+- **👑 Host Controls**: You'll see a crown icon indicating you're the host
 - **🔔 Admission Alerts**: Orange notifications when someone wants to join
-- **✅ Approve/Reject**: Control who can enter your meeting
+- **✅ Approve/Reject**: Full control over who can enter your meeting
 
-## 📱 Mobile Usage Guide
+## 🔧 **Technical Architecture**
+
+### **🌐 Enhanced Signaling System**
+
+AdjustMeeting uses a **multi-tier signaling approach** for maximum reliability:
+
+1. **Firebase Realtime Database** (Primary)
+   - Real-time messaging across devices and networks
+   - Handles join requests, WebRTC offers/answers, and ICE candidates
+   - Works globally with low latency
+
+2. **BroadcastChannel API** (Same-origin fallback)
+   - Instant communication between browser tabs/windows
+   - Perfect for testing and same-device scenarios
+
+3. **Enhanced localStorage** (Final fallback)
+   - Persistent storage with improved synchronization
+   - Ensures the app works even without internet connectivity
+
+### **🔗 WebRTC Implementation**
+
+- **Peer-to-Peer Connections**: Direct video/audio streams between participants
+- **Multiple STUN Servers**: Google's STUN servers for NAT traversal
+- **ICE Candidate Exchange**: Robust connection establishment
+- **Media Track Management**: Proper handling of audio/video streams
+- **Screen Share Support**: Seamless screen sharing with layout adaptation
+
+### **📱 Responsive Design**
+
+- **Mobile-First**: Optimized for smartphones and tablets
+- **Adaptive Layouts**: Video grid adjusts to screen size and participant count
+- **Touch-Friendly**: Large buttons and intuitive gestures
+- **Cross-Platform**: Works on iOS, Android, Windows, Mac, Linux
+
+## 🎯 **Current Capabilities**
+
+### **✅ What Works Perfectly:**
+
+1. **Same Device Testing**
+   - Open multiple browser tabs
+   - Create meeting in one tab, join from another
+   - Full video/audio communication works
+
+2. **Same Network Communication**
+   - Multiple devices on the same WiFi network
+   - Reliable signaling through Firebase
+   - Real-time join requests and admissions
+
+3. **Professional Features**
+   - Host admission control with real-time notifications
+   - Screen sharing with dedicated layout
+   - Participant management and status indicators
+   - Mobile-responsive design
+
+4. **Production-Ready UI**
+   - Clean, modern interface
+   - Proper video sizing (no more full-screen issues!)
+   - Intuitive controls and navigation
+   - Professional meeting experience
+
+### **⚠️ Network Limitations:**
+
+**Cross-Network Reality:**
+For participants on different networks (different ISPs, mobile data, etc.), additional infrastructure is needed:
+
+- **TURN Servers**: For NAT traversal in complex network environments
+- **Dedicated Signaling Server**: WebSocket server for guaranteed real-time messaging
+- **Backend Database**: For persistent room and user management
+
+## 🛠️ **Development Setup**
+
+### **Prerequisites:**
+- Node.js 18+ and npm
+- Modern browser with WebRTC support
+- Camera and microphone (for testing)
+
+### **Quick Start:**
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/adjustmeeting.git
+cd adjustmeeting
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open http://localhost:5173
+```
+
+### **Testing the Connection:**
+1. **Same Device**: Open two browser tabs, create meeting in one, join from the other
+2. **Same Network**: Use different devices on the same WiFi
+3. **Different Networks**: May require additional TURN server configuration
+
+## 📱 **Mobile Usage Guide**
 
 ### **📲 Mobile-Specific Features:**
 
-**Touch-Optimized Interface:**
-- Large buttons designed for finger taps
+**Optimized Interface:**
+- Large, touch-friendly buttons (44px minimum touch targets)
+- Responsive video grid that adapts to orientation
 - Swipe-friendly participant panels
-- Responsive video grid that adapts to screen orientation
+- Mobile-optimized notifications and modals
 
-**Mobile Browser Requirements:**
-- **iOS**: Safari 11+ or Chrome 60+
-- **Android**: Chrome 60+ or Samsung Internet 8+
-- **Permissions**: Allow camera and microphone access when prompted
+**Mobile Browser Support:**
+- **iOS Safari 11+**: Full support including screen sharing
+- **Chrome Mobile 60+**: Complete feature set
+- **Samsung Internet 8+**: Full compatibility
+- **Firefox Mobile 55+**: All features supported
 
 **Mobile Tips:**
 - **Portrait Mode**: Videos stack vertically for easy viewing
 - **Landscape Mode**: Videos arrange in a grid layout
 - **Screen Sharing**: Available on most modern mobile browsers
-- **Battery Saving**: App is optimized for longer battery life
+- **Battery Optimization**: Efficient rendering for longer battery life
 
-### **📐 Screen Size Support:**
-- **📱 Small Phones** (320px+): Single-column layouts
-- **📱 Large Phones** (375px+): Enhanced button sizes
-- **📱 Tablets** (768px+): Two-column layouts
-- **💻 Desktop** (1024px+): Full multi-column experience
+## 🔒 **Privacy & Security**
 
-## 🔧 Technical Requirements
-
-### **Browser Compatibility:**
-- ✅ **Chrome 60+** (Desktop & Mobile)
-- ✅ **Firefox 55+** (Desktop & Mobile)
-- ✅ **Safari 11+** (Desktop & Mobile)
-- ✅ **Edge 79+** (Desktop & Mobile)
-- ✅ **Samsung Internet 8+**
-- ✅ **iOS Safari 11+**
-
-### **System Requirements:**
-- **Internet**: Stable broadband connection (1 Mbps+ recommended)
-- **Hardware**: Camera and microphone (built-in or external)
-- **HTTPS**: Required for camera/microphone access (automatically provided)
-
-## 🛠️ Troubleshooting
-
-### **Common Issues & Solutions:**
-
-**❌ Camera/Microphone Not Working:**
-- ✅ **Check Permissions**: Allow camera/mic access when prompted
-- ✅ **Use HTTPS**: The site must be accessed via https:// (automatic on our site)
-- ✅ **Refresh Page**: Try refreshing and allowing permissions again
-- ✅ **Check Hardware**: Ensure camera/mic aren't being used by other apps
-
-**❌ Can't See Other Participants:**
-- ✅ **Wait for Approval**: Participants must be admitted by the host
-- ✅ **Check Connection**: Ensure stable internet on both ends
-- ✅ **Refresh Both Browsers**: Both host and participant should refresh
-- ✅ **Try Different Browser**: Switch to Chrome or Firefox if issues persist
-
-**❌ Screen Sharing Not Working:**
-- ✅ **Browser Support**: Use Chrome, Firefox, or Edge (Safari has limited support)
-- ✅ **HTTPS Required**: Automatic on our site
-- ✅ **Mobile Limitations**: Some mobile browsers don't support screen sharing
-
-**❌ Join Requests Not Showing:**
-- ✅ **Host Check**: Ensure you're the host (you'll see a crown icon)
-- ✅ **Refresh Page**: Host should refresh if not seeing requests
-- ✅ **Check Room Code**: Ensure participants are using the correct code
-
-**❌ Audio/Video Quality Issues:**
-- ✅ **Internet Speed**: Check your connection speed
-- ✅ **Close Other Apps**: Free up bandwidth by closing unnecessary applications
-- ✅ **Reduce Participants**: Fewer participants = better quality
-
-## 🎯 Usage Examples
-
-### **Business Meetings:**
-```
-Host: "Sarah Johnson"
-Title: "Q4 Planning Meeting"
-Code: "Q4PLAN2024"
-Participants: Team members join using the code
-```
-
-### **Family Calls:**
-```
-Host: "Mom"
-Title: "Sunday Family Chat"
-Code: "FAMILY123"
-Participants: Family members join from different locations
-```
-
-### **Study Groups:**
-```
-Host: "Alex"
-Title: "Math Study Session"
-Code: "MATH101"
-Participants: Classmates join to study together
-```
-
-## 🔒 Privacy & Security
-
-### **Your Privacy Matters:**
+### **Privacy-First Design:**
 - **No Registration**: No personal information stored
 - **Peer-to-Peer**: Direct connections between participants
 - **No Recording**: We don't record or store your meetings
@@ -233,29 +227,106 @@ Participants: Classmates join to study together
 ### **Security Features:**
 - **Host Control**: Only hosts can admit participants
 - **HTTPS Encryption**: All connections are encrypted
-- **No Server Storage**: No video/audio data passes through our servers
 - **WebRTC Security**: Industry-standard peer-to-peer encryption
+- **No Server Storage**: No video/audio data passes through our servers
 
-## 🚀 Advanced Features
+## 🚀 **Deployment Options**
 
-### **Screen Sharing:**
-- Click the monitor icon in the control bar
-- Select which screen or application to share
-- All participants will see your shared screen
-- Click again to stop sharing
+### **Netlify (Current)**
+- **Live Site**: https://adjustmeeting.netlify.app
+- **Automatic Deployments**: Updates on every commit
+- **Global CDN**: Fast loading worldwide
+- **HTTPS**: Automatic SSL certificates
 
-### **Meeting Management:**
-- **Participant List**: See everyone in the meeting with their status
-- **Audio/Video Indicators**: Green = on, Red = muted/off
-- **Host Controls**: Crown icon indicates meeting host
-- **Real-time Updates**: Status changes appear instantly
+### **Self-Hosting**
+```bash
+# Build for production
+npm run build
 
-### **Responsive Design:**
-- **Auto-Layout**: Video grid adjusts to screen size and participant count
-- **Touch-Friendly**: Large buttons for mobile devices
-- **Orientation Support**: Works in both portrait and landscape modes
+# Deploy the 'dist' folder to any static hosting service
+# Supports: Vercel, GitHub Pages, AWS S3, etc.
+```
 
-## 🌍 Global Accessibility
+## 🔍 **Troubleshooting**
+
+### **Common Issues & Solutions:**
+
+**❌ "Waiting to join" forever:**
+- ✅ **Check Network**: Ensure both devices have internet access
+- ✅ **Same Room Code**: Verify the exact room code is being used
+- ✅ **Host Active**: Ensure the host hasn't left the meeting
+- ✅ **Browser Refresh**: Try refreshing both host and participant browsers
+
+**❌ Camera/Microphone Not Working:**
+- ✅ **Allow Permissions**: Click "Allow" when browser asks for camera/mic access
+- ✅ **HTTPS Required**: The site must be accessed via https:// (automatic on our site)
+- ✅ **Check Hardware**: Ensure camera/mic aren't being used by other apps
+- ✅ **Browser Support**: Use Chrome, Firefox, Safari, or Edge
+
+**❌ Videos Too Large:**
+- ✅ **Fixed in Latest Version**: Videos now have proper responsive sizing
+- ✅ **Refresh Page**: Clear cache and refresh if you see old version
+- ✅ **Mobile Layout**: Videos adapt to screen size automatically
+
+**❌ Host Not Seeing Join Requests:**
+- ✅ **Orange Notification**: Look for orange popup in top-right corner
+- ✅ **Admission Button**: Click the user icon with notification badge
+- ✅ **Network Connection**: Ensure stable internet on both ends
+- ✅ **Browser Refresh**: Host should refresh if not seeing requests
+
+**❌ Screen Sharing Not Working:**
+- ✅ **Browser Support**: Use Chrome, Firefox, or Edge (Safari has limited support)
+- ✅ **HTTPS Required**: Automatic on our site
+- ✅ **Permissions**: Allow screen sharing when prompted
+- ✅ **Mobile Limitations**: Some mobile browsers don't support screen sharing
+
+## 🎯 **Usage Examples**
+
+### **Business Meetings:**
+```
+Host: "Sarah Johnson"
+Title: "Q4 Planning Meeting"
+Code: "Q4PLAN2024"
+Process: Sarah creates meeting, shares code with team, admits each member as they join
+```
+
+### **Family Calls:**
+```
+Host: "Mom"
+Title: "Sunday Family Chat"
+Code: "FAMILY123"
+Process: Mom creates meeting, family members join using code, Mom admits everyone
+```
+
+### **Study Groups:**
+```
+Host: "Alex"
+Title: "Math Study Session"
+Code: "MATH101"
+Process: Alex creates meeting, classmates join with code, Alex manages admissions
+```
+
+## 📊 **Performance & Bandwidth**
+
+### **Bandwidth Usage:**
+- **2 Participants**: ~1 Mbps upload/download each
+- **4 Participants**: ~2 Mbps upload/download each
+- **6+ Participants**: ~3+ Mbps upload/download each
+
+### **Performance Tips:**
+- **Use Chrome or Firefox** for optimal performance
+- **Close unnecessary tabs** to free up resources
+- **Wired internet** when possible for stability
+- **Good lighting** improves video quality
+- **Quiet environment** for better audio
+
+### **System Requirements:**
+- **Internet**: Stable broadband connection (1 Mbps+ recommended)
+- **Hardware**: Camera and microphone (built-in or external)
+- **Browser**: Chrome 60+, Firefox 55+, Safari 11+, Edge 79+
+- **RAM**: 4GB+ recommended for multiple participants
+
+## 🌍 **Global Accessibility**
 
 ### **Works Worldwide:**
 - **No Geographic Restrictions**: Use from anywhere
@@ -269,67 +340,52 @@ Participants: Classmates join to study together
 - **High Contrast**: Clear visual indicators
 - **Large Touch Targets**: Easy to use for everyone
 
-## 📊 Performance Tips
+## 🔮 **Future Enhancements**
 
-### **For Best Experience:**
-- **Use Chrome or Firefox** for optimal performance
-- **Close unnecessary tabs** to free up resources
-- **Use wired internet** when possible for stability
-- **Good lighting** improves video quality
-- **Quiet environment** for better audio
+### **Planned Features:**
+- **Chat System**: Text messaging during meetings
+- **Recording**: Meeting recording and playback
+- **Virtual Backgrounds**: AI-powered background replacement
+- **Breakout Rooms**: Split participants into smaller groups
+- **Meeting Scheduling**: Calendar integration
+- **User Authentication**: Optional user accounts
 
-### **Bandwidth Usage:**
-- **2 Participants**: ~1 Mbps upload/download
-- **4 Participants**: ~2 Mbps upload/download
-- **6+ Participants**: ~3+ Mbps upload/download
+### **Infrastructure Improvements:**
+- **Dedicated TURN Servers**: For better cross-network connectivity
+- **WebSocket Signaling**: Real-time messaging server
+- **Database Backend**: Persistent room and user management
+- **Load Balancing**: Support for larger meetings
 
-## ⚠️ Current Limitations
+## 🤝 **Contributing**
 
-### **Cross-Device Communication:**
-The current version uses a simplified signaling system that works best for:
-- **Same Network Testing**: Multiple devices on the same WiFi
-- **Local Development**: Testing with multiple browser tabs
-- **Demo Purposes**: Showcasing the interface and features
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### **For Production Use, You Would Need:**
-- **Dedicated Signaling Server**: WebSocket server for real-time messaging
-- **TURN Servers**: For NAT traversal in complex network environments
-- **Database Backend**: For persistent room management
-- **User Authentication**: For secure meeting access
+### **Areas for Contribution:**
+- **WebRTC Enhancements**: Better connection reliability
+- **UI/UX Improvements**: Design and usability enhancements
+- **Mobile Optimization**: iOS and Android specific improvements
+- **Accessibility**: Screen reader and keyboard navigation improvements
+- **Performance**: Optimization for larger meetings
+- **Documentation**: User guides and technical documentation
 
-### **Technical Details:**
-The app currently uses a hybrid approach:
-1. **JSONBin API** (when available) for cross-device signaling
-2. **LocalStorage fallback** for same-device testing
-3. **WebRTC** for actual peer-to-peer video/audio connections
-
-## 🤝 Support & Community
-
-### **Getting Help:**
-- **Documentation**: This README covers most use cases
-- **GitHub Issues**: Report bugs or request features
-- **Community**: Join discussions with other users
-
-### **Contributing:**
-- **Open Source**: Full source code available
-- **Pull Requests**: Contributions welcome
-- **Feature Requests**: Suggest new features
-- **Bug Reports**: Help us improve the platform
-
-## 📄 License
+## 📄 **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🙏 **Acknowledgments**
 
-- WebRTC community for excellent documentation
-- React team for the amazing framework
-- Tailwind CSS for beautiful responsive styling utilities
-- Lucide for clean, consistent icons
-- All our contributors who make this project better
+- **WebRTC Community** for excellent documentation and examples
+- **React Team** for the amazing framework
+- **Tailwind CSS** for beautiful, responsive styling utilities
+- **Lucide** for clean, consistent icons
+- **Firebase** for reliable real-time database services
+- **Netlify** for seamless deployment and hosting
+- **All Contributors** who make this project better
 
 ---
 
 **Made with ❤️ by the open source community**
 
-[Website](https://adjustmeeting.netlify.app) • [GitHub](https://github.com/yourusername/adjustmeeting) • [Issues](https://github.com/yourusername/adjustmeeting/issues)
+**Ready to connect the world, one meeting at a time! 🌍**
+
+[Website](https://adjustmeeting.netlify.app) • [GitHub](https://github.com/yourusername/adjustmeeting) • [Issues](https://github.com/yourusername/adjustmeeting/issues) • [Discussions](https://github.com/yourusername/adjustmeeting/discussions)

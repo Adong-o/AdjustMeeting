@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { useWebRTC } from '../contexts/WebRTCContext'
+import { useWebRTCContext } from '../contexts/WebRTCContext'
 import VideoGrid from './VideoGrid'
 import ControlBar from './ControlBar'
 import ParticipantsList from './ParticipantsList'
@@ -19,14 +19,15 @@ const MeetingRoom: React.FC = () => {
     isAudioEnabled, 
     isVideoEnabled, 
     isScreenSharing,
-    isHost,
     connectionStatus,
     initializeRoom,
     toggleAudio,
     toggleVideo,
     toggleScreenShare,
+    admitParticipant,
+    rejectParticipant,
     leaveMeeting
-  } = useWebRTC()
+  } = useWebRTCContext()
 
   const [copied, setCopied] = useState(false)
   const [showParticipants, setShowParticipants] = useState(false)
@@ -44,13 +45,14 @@ const MeetingRoom: React.FC = () => {
       const meetingData = location.state || {}
       console.log('🚀 Initializing meeting room with data:', meetingData)
       setMeetingInfo(meetingData)
-      initializeRoom(roomId, meetingData)
+      const userName = meetingData.isHost ? meetingData.hostName : meetingData.participantName
+      initializeRoom(roomId, meetingData.isHost || false, userName || 'User')
     }
-  }, [roomId, initializeRoom, location.state])
+  }, [roomId, location.state, initializeRoom])
 
   // Auto-show admission control when there are pending participants
   useEffect(() => {
-    if (isHost && pendingParticipants.length > 0 && !showAdmission) {
+    if (meetingInfo.isHost && pendingParticipants.length > 0 && !showAdmission) {
       console.log('👋 New join request detected, showing notification')
       setShowJoinNotification(true)
       // Auto-hide notification after 5 seconds
@@ -59,7 +61,7 @@ const MeetingRoom: React.FC = () => {
       }, 5000)
       return () => clearTimeout(timer)
     }
-  }, [isHost, pendingParticipants.length, showAdmission])
+  }, [meetingInfo.isHost, pendingParticipants.length, showAdmission])
 
   // Debug logging for participants
   useEffect(() => {
@@ -128,7 +130,7 @@ const MeetingRoom: React.FC = () => {
                 </button>
                 
                 {/* Admission control button (host only) */}
-                {isHost && (
+                {meetingInfo.isHost && (
                   <button
                     onClick={() => setShowAdmission(!showAdmission)}
                     className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm ${
@@ -190,7 +192,7 @@ const MeetingRoom: React.FC = () => {
       )}
       
       {/* Join Request Notification */}
-      {showJoinNotification && isHost && pendingParticipants.length > 0 && !showAdmission && (
+      {showJoinNotification && meetingInfo.isHost && pendingParticipants.length > 0 && !showAdmission && (
         <div className="fixed top-4 right-4 z-50 bg-orange-600 text-white p-3 sm:p-4 rounded-lg shadow-lg border border-orange-500 max-w-xs sm:max-w-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
@@ -222,9 +224,11 @@ const MeetingRoom: React.FC = () => {
       )}
       
       {/* Admission Control Modal */}
-      {showAdmission && isHost && (
+      {showAdmission && meetingInfo.isHost && (
         <AdmissionControl
           pendingParticipants={pendingParticipants}
+          onAdmit={admitParticipant}
+          onReject={rejectParticipant}
           onClose={() => setShowAdmission(false)}
         />
       )}

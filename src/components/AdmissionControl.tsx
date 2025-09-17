@@ -1,6 +1,5 @@
 import React from 'react'
 import { X, Check, UserX, Clock } from 'lucide-react'
-import { useWebRTC } from '../contexts/WebRTCContext'
 
 interface PendingParticipant {
   id: string
@@ -10,21 +9,24 @@ interface PendingParticipant {
 
 interface AdmissionControlProps {
   pendingParticipants: PendingParticipant[]
+  onAdmit: (participantId: string) => void
+  onReject: (participantId: string) => void
   onClose: () => void
 }
 
 const AdmissionControl: React.FC<AdmissionControlProps> = ({
   pendingParticipants,
+  onAdmit,
+  onReject,
   onClose
 }) => {
-  const { admitParticipant, rejectParticipant } = useWebRTC()
 
   const handleAdmit = (participantId: string) => {
-    admitParticipant(participantId)
+    onAdmit(participantId)
   }
 
   const handleReject = (participantId: string) => {
-    rejectParticipant(participantId)
+    onReject(participantId)
   }
 
   const formatTime = (date: Date) => {
