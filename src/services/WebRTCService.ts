@@ -27,22 +27,37 @@ export interface WebRTCCallbacks {
 export class WebRTCService {
   private roomId: string
   private participantId: string
+  private participantName: string
   private isHost: boolean
   private localStream: MediaStream | null = null
   private signalingService: SignalingService | null = null
   private peerConnections: Map<string, RTCPeerConnection> = new Map()
   private callbacks: WebRTCCallbacks
   private connectionStatus: string = 'Disconnected'
+  private iceServers: RTCIceServer[]
 
-  constructor(roomId: string, participantId: string, isHost: boolean, callbacks: WebRTCCallbacks) {
+  constructor(roomId: string, participantId: string, participantName: string, isHost: boolean, callbacks: WebRTCCallbacks) {
     this.roomId = roomId
     this.participantId = participantId
+    this.participantName = participantName
     this.isHost = isHost
     this.callbacks = callbacks
+
+    // Enhanced ICE servers for better connectivity
+    this.iceServers = [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+      { urls: 'stun:stun4.l.google.com:19302' },
+      // Add more STUN servers for better connectivity
+      { urls: 'stun:stun.services.mozilla.com' },
+      { urls: 'stun:stun.stunprotocol.org:3478' }
+    ]
   }
 
   async initialize(localStream: MediaStream) {
-    console.log('🚀 Initializing WebRTC service')
+    console.log('🚀 Initializing WebRTC service for:', this.participantName)
     this.localStream = localStream
     
     this.signalingService = new SignalingService(this.roomId, this.participantId, {
@@ -50,6 +65,12 @@ export class WebRTCService {
       onConnected: () => {
         console.log('✅ Signaling connected')
         this.updateConnectionStatus('Signaling Connected')
+        // Start the room flow after signaling is connected
+        if (this.isHost) {
+          this.createRoom()
+        } else {
+          this.requestToJoin()
+        }
       },
       onDisconnected: () => {
         console.log('❌ Signaling disconnected')
@@ -60,19 +81,10 @@ export class WebRTCService {
         this.updateConnectionStatus('Signaling Error')
       }
     })
-
-    // Wait for signaling to connect
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    if (this.isHost) {
-      await this.createRoom()
-    } else {
-      await this.requestToJoin()
-    }
   }
 
   private async createRoom() {
-    console.log('👑 Creating room as host')
+    console.log('👑 Creating room as host:', this.participantName)
     this.updateConnectionStatus('Room Created - Waiting for participants')
     
     await this.signalingService?.send({
@@ -80,13 +92,14 @@ export class WebRTCService {
       to: 'all',
       data: {
         hostId: this.participantId,
+        hostName: this.participantName,
         roomId: this.roomId
       }
     })
   }
 
   private async requestToJoin() {
-    console.log('🙋 Requesting to join room')
+    console.log('🙋 Requesting to join room as:', this.participantName)
     this.updateConnectionStatus('Requesting to join...')
     
     await this.signalingService?.send({
@@ -94,7 +107,7 @@ export class WebRTCService {
       to: 'all',
       data: {
         participantId: this.participantId,
-        participantName: 'Participant' // This should come from the UI
+        participantName: this.participantName
       }
     })
   }
@@ -102,73 +115,87 @@ export class WebRTCService {
   private async handleSignalingMessage(message: SignalingMessage) {
     console.log('📨 Handling signaling message:', message.type, 'from:', message.from.substring(0, 8))
     
-    switch (message.type) {
-      case 'room_created':
-        if (message.from !== this.participantId) {
-          console.log('🏠 Room created by host')
-        }
-        break
-        
-      case 'join_request':
-        if (this.isHost && message.from !== this.participantId) {
-          console.log('🙋 Join request received from:', message.data.participantName)
-          this.callbacks.onPendingParticipant({
-            id: message.from,
-            name: message.data.participantName,
-            requestTime: new Date()
-          })
-        }
-        break
-        
-      case 'join_approved':
-        if (message.to === this.participantId) {
-          console.log('✅ Join approved! Creating peer connection')
-          this.updateConnectionStatus('Connecting to host...')
-          await this.createPeerConnection(message.from, true)
-        }
-        break
-        
-      case 'participant_joined':
-        if (message.data.participantId !== this.participantId) {
-          console.log('👥 Participant joined:', message.data.participantName)
-          this.callbacks.onParticipantJoined({
-            id: message.data.participantId,
-            name: message.data.participantName,
-            isAudioEnabled: true,
-            isVideoEnabled: true
-          })
-          
-          if (this.isHost) {
-            await this.createPeerConnection(message.data.participantId, true)
+    try {
+      switch (message.type) {
+        case 'room_created':
+          if (message.from !== this.participantId) {
+            console.log('🏠 Room created by host:', message.data.hostName)
           }
-        }
-        break
-        
-      case 'webrtc_offer':
-        await this.handleOffer(message.from, message.data.offer)
-        break
-        
-      case 'webrtc_answer':
-        await this.handleAnswer(message.from, message.data.answer)
-        break
-        
-      case 'webrtc_ice_candidate':
-        await this.handleIceCandidate(message.from, message.data.candidate)
-        break
-        
-      case 'participant_left':
-        this.handleParticipantLeft(message.data.participantId)
-        break
+          break
+          
+        case 'join_request':
+          if (this.isHost && message.from !== this.participantId) {
+            console.log('🙋 Join request received from:', message.data.participantName)
+            this.callbacks.onPendingParticipant({
+              id: message.from,
+              name: message.data.participantName,
+              requestTime: new Date()
+            })
+          }
+          break
+          
+        case 'join_approved':
+          if (message.to === this.participantId) {
+            console.log('✅ Join approved! Creating peer connection')
+            this.updateConnectionStatus('Connecting to host...')
+            await this.createPeerConnection(message.from, true)
+          }
+          break
+          
+        case 'join_rejected':
+          if (message.to === this.participantId) {
+            console.log('❌ Join rejected')
+            this.updateConnectionStatus('Join request rejected')
+          }
+          break
+          
+        case 'participant_joined':
+          if (message.data.participantId !== this.participantId) {
+            console.log('👥 Participant joined:', message.data.participantName)
+            this.callbacks.onParticipantJoined({
+              id: message.data.participantId,
+              name: message.data.participantName,
+              isAudioEnabled: true,
+              isVideoEnabled: true
+            })
+            
+            // If we're the host, create a peer connection to the new participant
+            if (this.isHost) {
+              await this.createPeerConnection(message.data.participantId, true)
+            }
+          }
+          break
+          
+        case 'webrtc_offer':
+          await this.handleOffer(message.from, message.data.offer)
+          break
+          
+        case 'webrtc_answer':
+          await this.handleAnswer(message.from, message.data.answer)
+          break
+          
+        case 'webrtc_ice_candidate':
+          await this.handleIceCandidate(message.from, message.data.candidate)
+          break
+          
+        case 'participant_left':
+          if (message.data.participantId !== this.participantId) {
+            this.handleParticipantLeft(message.data.participantId)
+          }
+          break
 
-      case 'media_state_changed':
-        if (message.data.participantId !== this.participantId) {
-          this.callbacks.onParticipantMediaChanged(
-            message.data.participantId,
-            message.data.isAudioEnabled,
-            message.data.isVideoEnabled
-          )
-        }
-        break
+        case 'media_state_changed':
+          if (message.data.participantId !== this.participantId) {
+            this.callbacks.onParticipantMediaChanged(
+              message.data.participantId,
+              message.data.isAudioEnabled,
+              message.data.isVideoEnabled
+            )
+          }
+          break
+      }
+    } catch (error) {
+      console.error('❌ Error handling signaling message:', error)
     }
   }
 
@@ -176,13 +203,8 @@ export class WebRTCService {
     console.log('🔗 Creating peer connection with:', participantId.substring(0, 8))
     
     const peerConnection = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
-        { urls: 'stun:stun2.l.google.com:19302' },
-        { urls: 'stun:stun3.l.google.com:19302' },
-        { urls: 'stun:stun4.l.google.com:19302' }
-      ]
+      iceServers: this.iceServers,
+      iceCandidatePoolSize: 10
     })
 
     // Add local stream tracks
@@ -195,7 +217,7 @@ export class WebRTCService {
 
     // Handle remote stream
     peerConnection.ontrack = (event) => {
-      console.log('🎬 Received remote track:', event.track.kind)
+      console.log('🎬 Received remote track:', event.track.kind, 'from:', participantId.substring(0, 8))
       const [remoteStream] = event.streams
       this.callbacks.onRemoteStream(participantId, remoteStream)
       this.updateConnectionStatus('Connected')
@@ -204,7 +226,7 @@ export class WebRTCService {
     // Handle ICE candidates
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log('🧊 Sending ICE candidate')
+        console.log('🧊 Sending ICE candidate to:', participantId.substring(0, 8))
         this.signalingService?.send({
           type: 'webrtc_ice_candidate',
           to: participantId,
@@ -215,16 +237,32 @@ export class WebRTCService {
 
     // Handle connection state changes
     peerConnection.onconnectionstatechange = () => {
-      console.log('🔌 Connection state with', participantId.substring(0, 8), ':', peerConnection.connectionState)
-      if (peerConnection.connectionState === 'connected') {
-        this.updateConnectionStatus('Connected')
-      } else if (peerConnection.connectionState === 'failed') {
-        this.updateConnectionStatus('Connection Failed')
-        // Try to reconnect
-        setTimeout(() => {
-          this.createPeerConnection(participantId, true)
-        }, 2000)
+      const state = peerConnection.connectionState
+      console.log('🔌 Connection state with', participantId.substring(0, 8), ':', state)
+      
+      switch (state) {
+        case 'connected':
+          this.updateConnectionStatus('Connected')
+          break
+        case 'disconnected':
+          this.updateConnectionStatus('Disconnected')
+          break
+        case 'failed':
+          this.updateConnectionStatus('Connection Failed')
+          console.log('🔄 Attempting to reconnect...')
+          // Attempt to reconnect
+          setTimeout(() => {
+            if (peerConnection.connectionState === 'failed') {
+              this.createPeerConnection(participantId, true)
+            }
+          }, 2000)
+          break
       }
+    }
+
+    // Handle ICE connection state changes
+    peerConnection.oniceconnectionstatechange = () => {
+      console.log('🧊 ICE connection state with', participantId.substring(0, 8), ':', peerConnection.iceConnectionState)
     }
 
     this.peerConnections.set(participantId, peerConnection)
@@ -253,7 +291,12 @@ export class WebRTCService {
   private async handleOffer(participantId: string, offer: RTCSessionDescriptionInit) {
     try {
       console.log('📞 Handling offer from:', participantId.substring(0, 8))
-      await this.createPeerConnection(participantId, false)
+      
+      // Create peer connection if it doesn't exist
+      if (!this.peerConnections.has(participantId)) {
+        await this.createPeerConnection(participantId, false)
+      }
+      
       const peerConnection = this.peerConnections.get(participantId)
       
       if (peerConnection) {
@@ -293,6 +336,8 @@ export class WebRTCService {
       if (peerConnection && peerConnection.remoteDescription) {
         await peerConnection.addIceCandidate(candidate)
         console.log('✅ Added ICE candidate from:', participantId.substring(0, 8))
+      } else {
+        console.log('⏳ Queuing ICE candidate (no remote description yet)')
       }
     } catch (error) {
       console.error('❌ Error adding ICE candidate:', error)
@@ -312,12 +357,14 @@ export class WebRTCService {
   async admitParticipant(participantId: string, participantName: string) {
     console.log('✅ Admitting participant:', participantName)
     
+    // Send approval to the specific participant
     await this.signalingService?.send({
       type: 'join_approved',
       to: participantId,
-      data: {}
+      data: { hostName: this.participantName }
     })
     
+    // Broadcast to all that this participant has joined
     await this.signalingService?.send({
       type: 'participant_joined',
       to: 'all',
@@ -333,7 +380,7 @@ export class WebRTCService {
     await this.signalingService?.send({
       type: 'join_rejected',
       to: participantId,
-      data: {}
+      data: { reason: 'Rejected by host' }
     })
   }
 
@@ -350,12 +397,18 @@ export class WebRTCService {
   }
 
   async replaceVideoTrack(newTrack: MediaStreamTrack) {
-    this.peerConnections.forEach(peerConnection => {
+    console.log('🔄 Replacing video track for all peer connections')
+    this.peerConnections.forEach(async (peerConnection, participantId) => {
       const sender = peerConnection.getSenders().find(s => 
         s.track && s.track.kind === 'video'
       )
       if (sender) {
-        sender.replaceTrack(newTrack)
+        try {
+          await sender.replaceTrack(newTrack)
+          console.log('✅ Video track replaced for:', participantId.substring(0, 8))
+        } catch (error) {
+          console.error('❌ Error replacing video track:', error)
+        }
       }
     })
   }
@@ -363,15 +416,26 @@ export class WebRTCService {
   async leave() {
     console.log('👋 Leaving meeting')
     
+    // Notify others that we're leaving
     await this.signalingService?.send({
       type: 'participant_left',
       to: 'all',
       data: { participantId: this.participantId }
     })
     
-    this.peerConnections.forEach(pc => pc.close())
+    // Close all peer connections
+    this.peerConnections.forEach(pc => {
+      pc.close()
+    })
     this.peerConnections.clear()
+    
+    // Disconnect signaling
     this.signalingService?.disconnect()
+    
+    // Stop local stream
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => track.stop())
+    }
   }
 
   private updateConnectionStatus(status: string) {
@@ -381,5 +445,18 @@ export class WebRTCService {
 
   getConnectionStatus(): string {
     return this.connectionStatus
+  }
+
+  getPeerConnectionsCount(): number {
+    return this.peerConnections.size
+  }
+
+  // Debug method to get connection states
+  getConnectionStates(): Record<string, string> {
+    const states: Record<string, string> = {}
+    this.peerConnections.forEach((pc, id) => {
+      states[id.substring(0, 8)] = pc.connectionState
+    })
+    return states
   }
 }

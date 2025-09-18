@@ -42,7 +42,7 @@ AdjustMeeting is a **production-ready** video conferencing platform built with m
 3. **Create the Meeting**
    - Click the blue "Create Meeting" button
    - Your camera and microphone will activate (allow permissions)
-   - You'll see yourself in a properly sized video tile (not full screen!)
+   - You'll see yourself in a properly sized video tile (responsive design!)
    - The meeting is now live and ready for participants
 
 4. **Share the Room Code**
@@ -50,9 +50,9 @@ AdjustMeeting is a **production-ready** video conferencing platform built with m
    - Share it with participants via text, email, or messaging app
    - Participants will use this exact code to request to join
 
-5. **Manage Join Requests (This is where the magic happens!)**
+5. **Manage Join Requests**
    - When someone wants to join, you'll see an **orange notification popup**
-   - The notification shows the participant's name and request time
+   - The notification shows the participant's name and bounces to get attention
    - Click "Review" or the orange admission button in the header
    - You'll see a list of people waiting to join with their details
    - Click the green checkmark ✅ to **admit** or red X ❌ to **reject**
@@ -93,7 +93,7 @@ AdjustMeeting is a **production-ready** video conferencing platform built with m
 - **📞 Leave**: Click the red phone button to exit the meeting
 
 **For Hosts Only:**
-- **👑 Host Controls**: You'll see a crown icon indicating you're the host
+- **👑 Host Controls**: You'll see enhanced admission controls
 - **🔔 Admission Alerts**: Orange notifications when someone wants to join
 - **✅ Approve/Reject**: Full control over who can enter your meeting
 
@@ -107,22 +107,26 @@ AdjustMeeting uses a **multi-tier signaling approach** for maximum reliability:
    - Real-time messaging across devices and networks
    - Handles join requests, WebRTC offers/answers, and ICE candidates
    - Works globally with low latency
+   - **This enables cross-browser and cross-device communication!**
 
-2. **BroadcastChannel API** (Same-origin fallback)
+2. **BroadcastChannel API** (Same-origin optimization)
    - Instant communication between browser tabs/windows
    - Perfect for testing and same-device scenarios
+   - Zero latency for same-browser communication
 
 3. **Enhanced localStorage** (Final fallback)
    - Persistent storage with improved synchronization
    - Ensures the app works even without internet connectivity
+   - Automatic cleanup of old messages
 
 ### **🔗 WebRTC Implementation**
 
 - **Peer-to-Peer Connections**: Direct video/audio streams between participants
-- **Multiple STUN Servers**: Google's STUN servers for NAT traversal
+- **Multiple STUN Servers**: Enhanced connectivity with 7 STUN servers
 - **ICE Candidate Exchange**: Robust connection establishment
 - **Media Track Management**: Proper handling of audio/video streams
 - **Screen Share Support**: Seamless screen sharing with layout adaptation
+- **Connection Recovery**: Automatic reconnection on failures
 
 ### **📱 Responsive Design**
 
@@ -138,33 +142,43 @@ AdjustMeeting uses a **multi-tier signaling approach** for maximum reliability:
 1. **Same Device Testing**
    - Open multiple browser tabs
    - Create meeting in one tab, join from another
-   - Full video/audio communication works
+   - Full video/audio communication works instantly
 
-2. **Same Network Communication**
+2. **Cross-Browser Communication**
+   - Chrome to Firefox, Safari to Edge, etc.
+   - Different browsers on the same device
+   - Firebase signaling handles the connection
+
+3. **Same Network Communication**
    - Multiple devices on the same WiFi network
    - Reliable signaling through Firebase
    - Real-time join requests and admissions
 
-3. **Professional Features**
+4. **Professional Features**
    - Host admission control with real-time notifications
    - Screen sharing with dedicated layout
    - Participant management and status indicators
    - Mobile-responsive design
 
-4. **Production-Ready UI**
+5. **Production-Ready UI**
    - Clean, modern interface
-   - Proper video sizing (no more full-screen issues!)
+   - Proper video sizing (responsive grid layout!)
    - Intuitive controls and navigation
    - Professional meeting experience
 
 ### **⚠️ Network Limitations:**
 
 **Cross-Network Reality:**
-For participants on different networks (different ISPs, mobile data, etc.), additional infrastructure is needed:
+For participants on different networks (different ISPs, mobile data, etc.), additional infrastructure may be needed:
 
 - **TURN Servers**: For NAT traversal in complex network environments
 - **Dedicated Signaling Server**: WebSocket server for guaranteed real-time messaging
 - **Backend Database**: For persistent room and user management
+
+**Current Status:**
+- ✅ **Same Device**: 100% working
+- ✅ **Same Network**: Works reliably with Firebase
+- ⚠️ **Cross-Network**: May require TURN servers for some network configurations
 
 ## 🛠️ **Development Setup**
 
@@ -190,8 +204,9 @@ npm run dev
 
 ### **Testing the Connection:**
 1. **Same Device**: Open two browser tabs, create meeting in one, join from the other
-2. **Same Network**: Use different devices on the same WiFi
-3. **Different Networks**: May require additional TURN server configuration
+2. **Cross-Browser**: Use Chrome and Firefox on the same device
+3. **Same Network**: Use different devices on the same WiFi
+4. **Cross-Network**: Test with devices on different networks
 
 ## 📱 **Mobile Usage Guide**
 
@@ -210,8 +225,8 @@ npm run dev
 - **Firefox Mobile 55+**: All features supported
 
 **Mobile Tips:**
-- **Portrait Mode**: Videos stack vertically for easy viewing
-- **Landscape Mode**: Videos arrange in a grid layout
+- **Portrait Mode**: Videos stack in responsive grid
+- **Landscape Mode**: Videos arrange optimally for screen size
 - **Screen Sharing**: Available on most modern mobile browsers
 - **Battery Optimization**: Efficient rendering for longer battery life
 
@@ -256,6 +271,7 @@ npm run build
 - ✅ **Same Room Code**: Verify the exact room code is being used
 - ✅ **Host Active**: Ensure the host hasn't left the meeting
 - ✅ **Browser Refresh**: Try refreshing both host and participant browsers
+- ✅ **Firebase Access**: Check if Firebase Realtime Database is accessible
 
 **❌ Camera/Microphone Not Working:**
 - ✅ **Allow Permissions**: Click "Allow" when browser asks for camera/mic access
@@ -263,16 +279,16 @@ npm run build
 - ✅ **Check Hardware**: Ensure camera/mic aren't being used by other apps
 - ✅ **Browser Support**: Use Chrome, Firefox, Safari, or Edge
 
-**❌ Videos Too Large:**
-- ✅ **Fixed in Latest Version**: Videos now have proper responsive sizing
+**❌ Videos Too Large/Small:**
+- ✅ **Responsive Design**: Videos now automatically size based on participant count
+- ✅ **Screen Size**: Layout adapts to mobile, tablet, and desktop
 - ✅ **Refresh Page**: Clear cache and refresh if you see old version
-- ✅ **Mobile Layout**: Videos adapt to screen size automatically
 
 **❌ Host Not Seeing Join Requests:**
-- ✅ **Orange Notification**: Look for orange popup in top-right corner
+- ✅ **Orange Notification**: Look for bouncing orange popup in top-right corner
 - ✅ **Admission Button**: Click the user icon with notification badge
 - ✅ **Network Connection**: Ensure stable internet on both ends
-- ✅ **Browser Refresh**: Host should refresh if not seeing requests
+- ✅ **Firebase Connection**: Check browser console for signaling errors
 
 **❌ Screen Sharing Not Working:**
 - ✅ **Browser Support**: Use Chrome, Firefox, or Edge (Safari has limited support)
@@ -331,7 +347,7 @@ Process: Alex creates meeting, classmates join with code, Alex manages admission
 ### **Works Worldwide:**
 - **No Geographic Restrictions**: Use from anywhere
 - **Multiple Time Zones**: Perfect for international meetings
-- **Low Bandwidth Mode**: Optimized for slower connections
+- **Firebase Global**: Signaling works across continents
 - **Mobile Data Friendly**: Efficient data usage
 
 ### **Accessibility Features:**

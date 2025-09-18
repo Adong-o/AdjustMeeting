@@ -63,13 +63,6 @@ const MeetingRoom: React.FC = () => {
     }
   }, [meetingInfo.isHost, pendingParticipants.length, showAdmission])
 
-  // Debug logging for participants
-  useEffect(() => {
-    console.log('👥 Current participants:', participants.length)
-    console.log('⏳ Pending participants:', pendingParticipants.length)
-    console.log('🔌 Connection status:', connectionStatus)
-  }, [participants.length, pendingParticipants.length])
-
   const copyRoomId = async () => {
     if (roomId) {
       await navigator.clipboard.writeText(roomId)
@@ -100,7 +93,14 @@ const MeetingRoom: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <h1 className="text-lg sm:text-xl font-semibold text-white">AdjustMeeting</h1>
               <div className="text-sm sm:text-base text-gray-300">{meetingInfo.meetingTitle}</div>
-              <div className="text-xs text-gray-400">Status: {connectionStatus}</div>
+              <div className={`text-xs px-2 py-1 rounded-full ${
+                connectionStatus.includes('Connected') ? 'bg-green-900 text-green-300' :
+                connectionStatus.includes('Connecting') || connectionStatus.includes('Requesting') ? 'bg-yellow-900 text-yellow-300' :
+                connectionStatus.includes('Failed') || connectionStatus.includes('Error') ? 'bg-red-900 text-red-300' :
+                'bg-gray-700 text-gray-400'
+              }`}>
+                {connectionStatus}
+              </div>
             </div>
             
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -179,11 +179,11 @@ const MeetingRoom: React.FC = () => {
       
       {/* Participants Panel */}
       {showParticipants && (
-        <div className="w-full lg:w-80 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 max-h-96 lg:max-h-full overflow-y-auto">
+        <div className="w-full lg:w-80 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 max-h-80 lg:max-h-full overflow-y-auto">
           <ParticipantsList
             participants={participants}
             localParticipantName={currentUserName}
-            isLocalHost={isHost}
+            isLocalHost={meetingInfo.isHost}
             isLocalAudioEnabled={isAudioEnabled}
             isLocalVideoEnabled={isVideoEnabled}
             onClose={() => setShowParticipants(false)}
@@ -193,7 +193,7 @@ const MeetingRoom: React.FC = () => {
       
       {/* Join Request Notification */}
       {showJoinNotification && meetingInfo.isHost && pendingParticipants.length > 0 && !showAdmission && (
-        <div className="fixed top-4 right-4 z-50 bg-orange-600 text-white p-3 sm:p-4 rounded-lg shadow-lg border border-orange-500 max-w-xs sm:max-w-sm">
+        <div className="fixed top-4 right-4 z-50 bg-orange-600 text-white p-3 sm:p-4 rounded-lg shadow-xl border border-orange-500 max-w-xs sm:max-w-sm animate-bounce">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -209,13 +209,13 @@ const MeetingRoom: React.FC = () => {
           <p className="text-xs sm:text-sm mb-3">
             {pendingParticipants[0]?.name} wants to join the meeting
           </p>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 text-center">
             <button
               onClick={() => {
                 setShowAdmission(true)
                 setShowJoinNotification(false)
               }}
-              className="flex-1 bg-white text-orange-600 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium hover:bg-gray-100 transition-colors"
+              className="flex-1 bg-white text-orange-600 px-3 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
             >
               Review
             </button>

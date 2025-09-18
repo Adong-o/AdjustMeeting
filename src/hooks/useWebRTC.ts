@@ -30,12 +30,10 @@ export const useWebRTC = (): UseWebRTCReturn => {
   const webrtcServiceRef = useRef<WebRTCService | null>(null)
   const originalStreamRef = useRef<MediaStream | null>(null)
   const participantIdRef = useRef<string>(Math.random().toString(36).substr(2, 9))
-  const userNameRef = useRef<string>('')
 
   const initializeRoom = useCallback(async (roomId: string, isHost: boolean, userName: string) => {
     try {
-      console.log('🚀 Initializing room:', roomId, 'as', isHost ? 'host' : 'participant')
-      userNameRef.current = userName
+      console.log('🚀 Initializing room:', roomId, 'as', isHost ? 'host' : 'participant', 'name:', userName)
       setConnectionStatus('Getting media...')
       
       // Get user media with optimized constraints
@@ -61,6 +59,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
       webrtcServiceRef.current = new WebRTCService(
         roomId,
         participantIdRef.current,
+        userName,
         isHost,
         {
           onParticipantJoined: (participant) => {
@@ -112,15 +111,24 @@ export const useWebRTC = (): UseWebRTCReturn => {
       console.error('❌ Error initializing room:', error)
       setConnectionStatus('Initialization Failed')
       
-      // Try audio only
+      // Try audio only as fallback
       try {
+        console.log('🎤 Trying audio-only mode...')
         const audioStream = await navigator.mediaDevices.getUserMedia({ 
-          audio: true, 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }, 
           video: false 
         })
         setLocalStream(audioStream)
         setIsVideoEnabled(false)
         setConnectionStatus('Audio Only Mode')
+        
+        if (webrtcServiceRef.current) {
+          await webrtcServiceRef.current.initialize(audioStream)
+        }
       } catch (audioError) {
         console.error('❌ Error accessing audio:', audioError)
         setConnectionStatus('Media Access Denied')
@@ -135,6 +143,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
         audioTrack.enabled = !audioTrack.enabled
         setIsAudioEnabled(audioTrack.enabled)
         webrtcServiceRef.current?.broadcastMediaState(audioTrack.enabled, isVideoEnabled)
+        console.log('🎤 Audio toggled:', audioTrack.enabled ? 'ON' : 'OFF')
       }
     }
   }, [localStream, isVideoEnabled])
@@ -146,6 +155,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
         videoTrack.enabled = !videoTrack.enabled
         setIsVideoEnabled(videoTrack.enabled)
         webrtcServiceRef.current?.broadcastMediaState(isAudioEnabled, videoTrack.enabled)
+        console.log('📹 Video toggled:', videoTrack.enabled ? 'ON' : 'OFF')
       }
     }
   }, [localStream, isAudioEnabled])
@@ -153,8 +163,12 @@ export const useWebRTC = (): UseWebRTCReturn => {
   const toggleScreenShare = useCallback(async () => {
     try {
       if (!isScreenSharing) {
+        console.log('🖥️ Starting screen share...')
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+          video: { 
+            width: { ideal: 1920, max: 1920 },
+            height: { ideal: 1080, max: 1080 }
+          },
           audio: true
         })
         
@@ -167,8 +181,9 @@ export const useWebRTC = (): UseWebRTCReturn => {
           await webrtcServiceRef.current?.replaceVideoTrack(videoTrack)
         }
         
-        // Handle screen share end
+        // Handle screen share end (when user stops sharing)
         videoTrack.addEventListener('ended', () => {
+          console.log('🖥️ Screen share ended by user')
           if (originalStreamRef.current) {
             setLocalStream(originalStreamRef.current)
             setIsScreenSharing(false)
@@ -182,6 +197,7 @@ export const useWebRTC = (): UseWebRTCReturn => {
         })
         
       } else {
+        console.log('🖥️ Stopping screen share...')
         if (originalStreamRef.current) {
           setLocalStream(originalStreamRef.current)
           setIsScreenSharing(false)
@@ -194,32 +210,44 @@ export const useWebRTC = (): UseWebRTCReturn => {
       }
     } catch (error) {
       console.error('❌ Error toggling screen share:', error)
+      setConnectionStatus('Screen Share Failed')
     }
   }, [isScreenSharing])
 
   const admitParticipant = useCallback((participantId: string) => {
     const pending = pendingParticipants.find(p => p.id === participantId)
     if (pending) {
+      console.log('✅ Admitting participant:', pending.name)
       webrtcServiceRef.current?.admitParticipant(participantId, pending.name)
       setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
     }
   }, [pendingParticipants])
 
   const rejectParticipant = useCallback((participantId: string) => {
-    webrtcServiceRef.current?.rejectParticipant(participantId)
-    setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
-  }, [])
+    const pending = pendingParticipants.find(p => p.id === participantId)
+    if (pending) {
+      console.log('❌ Rejecting participant:', pending.name)
+      webrtcServiceRef.current?.rejectParticipant(participantId)
+      setPendingParticipants(prev => prev.filter(p => p.id !== participantId))
+    }
+  }, [pendingParticipants])
 
   const leaveMeeting = useCallback(() => {
+    console.log('👋 Leaving meeting...')
     webrtcServiceRef.current?.leave()
     
+    // Stop all tracks
     if (localStream) {
-      localStream.getTracks().forEach(track => track.stop())
+      localStream.getTracks().forEach(track => {
+        track.stop()
+        console.log('🛑 Stopped track:', track.kind)
+      })
     }
     if (originalStreamRef.current) {
       originalStreamRef.current.getTracks().forEach(track => track.stop())
     }
     
+    // Reset state
     setLocalStream(null)
     setParticipants([])
     setPendingParticipants([])
@@ -229,10 +257,25 @@ export const useWebRTC = (): UseWebRTCReturn => {
     setConnectionStatus('Disconnected')
   }, [localStream])
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       webrtcServiceRef.current?.leave()
     }
+  }, [])
+
+  // Debug logging
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (webrtcServiceRef.current) {
+        const states = webrtcServiceRef.current.getConnectionStates()
+        if (Object.keys(states).length > 0) {
+          console.log('🔍 Connection states:', states)
+        }
+      }
+    }, 10000) // Log every 10 seconds
+
+    return () => clearInterval(interval)
   }, [])
 
   return {
